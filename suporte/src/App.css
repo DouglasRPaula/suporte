@@ -5,12 +5,11 @@
 }
 
 .footer {
-  bottom: 0;
   min-height: 60px;
   text-align: center;
   padding-top: 10px;
   background-color: #bec4c8;
-  width: 100%;
+  margin-left: 250px;
 }
 
 .side-bar {

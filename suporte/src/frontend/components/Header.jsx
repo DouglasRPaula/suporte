@@ -1,5 +1,6 @@
 import Image from "react-bootstrap/Image";
 
+
 export default function NavBar() {
   const customNavbarColor = {
     backgroundColor: "#598392",
@@ -18,7 +19,7 @@ export default function NavBar() {
         <div className="ml-3">
           <a className="navbar-brand" href="/">
             <Image
-              src="../../src/assets/geolabor-branco-simples.png"
+              src={require("../../assets/geolabor-branco-simples.png")}
               alt="logo"
               className="mr-1 ms-2 mb-2"
               style={{ height: "23px" }}

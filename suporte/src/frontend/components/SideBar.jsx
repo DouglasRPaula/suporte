@@ -25,6 +25,11 @@ export default function SideBar() {
             Documentação
           </a>
         </li>
+        <li className="nav-item">
+          <a className="nav-link text-dark" href="/">
+            Metricas
+          </a>
+        </li>
       </ul>
     );
   }

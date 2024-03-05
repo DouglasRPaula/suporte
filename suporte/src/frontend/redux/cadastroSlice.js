@@ -1,5 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+import {
+  empresas,
+  contratos,
+  criticidades,
+  tipoChamado,
+} from "../constants/opcoesFormulario";
+
 const chamadoSlice = createSlice({
   name: "chamado",
   initialState: {
@@ -14,7 +21,12 @@ const chamadoSlice = createSlice({
     tipoChamado: "",
     descricaoChamado: "",
     chamados: [],
-    error: null, // Adicionando error ao initialState
+    opcoes: {
+      empresas,
+      contratos,
+      criticidades,
+      tipoChamado,
+    },
   },
   reducers: {
     atualizarValor: (state, action) => {
@@ -23,7 +35,6 @@ const chamadoSlice = createSlice({
       if (error) {
         state.error = error;
       } else {
-        state.error = null; // Limpe o erro ao atualizar o valor
         state[campo] = valor;
       }
     },
@@ -38,7 +49,6 @@ const chamadoSlice = createSlice({
       state.chamadoEncerrado = "";
       state.tipoChamado = "";
       state.descricaoChamado = "";
-      state.error = null; // Certifique-se de limpar o erro ao limpar o formulário
     },
     adicionarChamado: (state, action) => {
       state.chamados.push(action.payload);

@@ -8,7 +8,7 @@ const ChamadosSchema = new mongoose.Schema({
     solicitante: String,
     criticidadeRevisada: String,
     dataEncerramento: Date,
-    chamadoEncerrado: String,
+    chamadoEncerrado: Boolean,
     tipoChamado: String,
     descricaoChamado: String,
 })
