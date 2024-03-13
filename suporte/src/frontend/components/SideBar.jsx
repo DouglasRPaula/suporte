@@ -1,7 +1,7 @@
 export default function SideBar() {
     return (
       <ul className="nav flex-column">
-        <div className="my-2 app-name">
+        <div className="my-2 app-name upper">
           <p className="mb-0">Suporte</p>
         </div>
   
@@ -26,7 +26,7 @@ export default function SideBar() {
           </a>
         </li>
         <li className="nav-item">
-          <a className="nav-link text-dark" href="/">
+          <a className="nav-link text-dark" href="/metricas">
             Metricas
           </a>
         </li>

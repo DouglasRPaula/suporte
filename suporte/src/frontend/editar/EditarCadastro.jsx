@@ -1,141 +1,339 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  atualizarValor,
+  limparForm,
+  preencherChamados,
+} from "../redux/cadastroSlice";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import { useNavigate, useParams } from "react-router";
+import {
+  empresas,
+  contratos,
+  tipoChamado,
+  criticidades,
+} from "../constants/opcoesFormulario.js";
 
-export default function CadastroPage() {
-  const [validado, setValidado] = useState(false);
+export default function EditarChamado() {
+  const chamado = useSelector((state) => state.chamado);
+  const dispatch = useDispatch();
+  const params = useParams();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
+  const formatarDataParaServer = (data) => {
+    if (!data) return "";
+    const dataFormatada = new Date(data);
+    return dataFormatada.toISOString();
+  };
+
+  useEffect(() => {
+    async function fetchata() {
+      const id = params.id.toString();
+      const response = await fetch(
+        `http://localhost:5000/chamados/${params.id}`
+      );
+
+      if (!response.ok) {
+        const message = `Ocorreu um erro ${response.statusText}`;
+        window.alert(message);
+        return;
+      }
+
+      const chamado = await response.json();
+      if (!chamado) {
+        window.alert(`chamado com o ${id} não encontrado`);
+        navigate("/");
+        return;
+      }
+
+      dispatch(preencherChamados(chamado));
     }
 
-    setValidado(true);
+    fetchata();
+  }, [params.id, navigate, dispatch]);
+
+  async function aoEnviar(e) {
+    e.preventDefault();
+
+    const chamadoEditado = {
+      numeroChamado: chamado.numeroChamado,
+      empresa: chamado.empresa,
+      contrato: chamado.contrato,
+      dataInicio: chamado.dataInicio,
+      solicitante: chamado.solicitante,
+      criticidadeRevisada: chamado.criticidade,
+      dataEncerramento: chamado.dataEncerramento,
+      chamadoEncerrado: chamado.chamadoEncerrado,
+      tipoChamado: chamado.tipoChamado,
+      descricaoChamado: chamado.descricaoChamado,
+      tempoChamado: chamado.tempoChamado,
+    };
+
+    const dataInicioFormatted = formatarDataParaServer(
+      new Date(chamado.dataInicio)
+    );
+    const dataEncerramentoFormatted = formatarDataParaServer(
+      new Date(chamado.dataEncerramento)
+    );
+
+    await fetch(`http://localhost:5000/update/${params.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        chamadoEditado,
+        dataInicio: dataInicioFormatted,
+        dataEncerramento: dataEncerramentoFormatted,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(limparForm());
+    navigate("/");
+  }
+
+  // async function aoEnviar(e) {
+  //   e.preventDefault();
+
+  //   if (!chamado) {
+  //     console.error("chamado is undefined");
+  //     return;
+  //   }
+
+  //   const novoChamado = { ...chamado, chamadoEncerrado: chamadoEncerrado };
+
+  //   dispatch(adicionarChamado(novoChamado));
+
+  //   const response = await fetch("http://localhost:5000/chamados/adicionar", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       ...novoChamado,
+  //     }),
+  //   });
+
+  //   if (response.status === 400) {
+  //     const data = await response.json();
+  //     dispatch(
+  //       atualizarValor({
+  //         error: data.error,
+  //       })
+  //     );
+  //     return;
+  //   }
+
+  //   dispatch(tempoChamado(novoChamado));
+  //   navigate("/");
+  // }
+
+  const aoVoltar = (e) => {
+    e.preventDefault();
+    navigate("/");
+  };
+
+  const [chamadoEncerrado, setChamadoEncerrado] = useState(false);
+
+  const handleSwitchChange = (e) => {
+    setChamadoEncerrado(e.target.checked);
+
+    dispatch(
+      atualizarValor({ campo: "chamadoEncerrado", valor: e.target.checked })
+    );
   };
 
   return (
-    <main className="ml-sm-auto pt-3">
+    <div className="ml-sm-auto">
       <div className="my-2">
         <div className="d-flex justify-content-between flex-nowrap align-items-center pb-2 mb-3 border-bottom">
           <h1 className="h4 mb-0">Editar chamado</h1>
         </div>
       </div>
-      <Form noValidate validated={validado} onSubmit={handleSubmit}>
+      <Form onSubmit={aoEnviar}>
         <Row className="mb-3">
-          <Form.Group as={Col} md="12" controlId="valiationCustom01">
+          <Form.Group as={Col} md="12">
             <Form.Label>Número do chamado</Form.Label>
-            <Form.Control
+            <input
               required
               type="number"
+              value={chamado.numeroChamado}
+              className="form-control"
               placeholder="Número do chamado"
+              id="numeroChamado"
+              onChange={(e) =>
+                dispatch(
+                  atualizarValor({
+                    campo: "numeroChamado",
+                    valor: e.target.value,
+                  })
+                )
+              }
             />
-          </Form.Group>
-          <Form.Group as={Col} md="6" controlId="validationCustom02">
             <Form.Label>Empresa</Form.Label>
-            <Form.Select>
-              <option value>Selecione uma empresa</option>
-              <option value={1}>CBMM</option>
-              <option value={2}>Reta</option>
-              <option value={3}>Vale</option>
-              <option value={4}>Gerdau</option>
-              <option value={5}>JMendes</option>
-              <option value={6}>Eurochem</option>
-              <option value={7}>MCA</option>
-              <option value={8}>Chammas</option>
-              <option value={9}>Samarco</option>
-            </Form.Select>
-          </Form.Group>
-          <Form.Group as={Col} md="6" controlId="validationCustom03">
-            {" "}
-            {/* colocar logica de validação para se a empresa for x só pode aparecer certos contratos/ não mostrar contratos */}
+            <select
+              className="form-select"
+              value={chamado.empresa}
+              onChange={(e) =>
+                dispatch(
+                  atualizarValor({
+                    campo: "empresa",
+                    valor: e.target.value,
+                  })
+                )
+              }
+            >
+              <option value="">Selecione uma empresa</option>
+              {Object.entries(empresas).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+
             <Form.Label>Contrato</Form.Label>
-            <Form.Select>
-              <option value>Selecione um contrato</option>
-              <option value={1}>Chammas novo</option>
-              <option value={2}>Chammas antigo</option>
-              <option value={3}>Vale CTO</option>
-              <option value={4}>Vale Lims</option>
-              <option value={5}>JMendes</option>
-              <option value={6}>Eurochem</option>
-              <option value={7}>MCA</option>
-              <option value={8}>CBMM</option>
-              <option value={9}>Samarco Projetos</option>
-              <option value={0}>Samarco</option>
-              <option value={11}>Vale Lims</option>
-              <option value={12}>Reta</option>
-              <option value={13}>Vale</option>
-              <option value={14}>Gerdau</option>
-            </Form.Select>
-          </Form.Group>
-          <Form.Group as={Col} md="6" controlId="validationCustom04">
+            <select
+              className="form-select"
+              value={chamado.contrato}
+              onChange={(e) =>
+                dispatch(
+                  atualizarValor({
+                    campo: "contrato",
+                    valor: e.target.value,
+                  })
+                )
+              }
+            >
+              {Object.entries(contratos).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
             <Form.Label>Data de Início</Form.Label>
-            <Form.Control required type="date" />
-          </Form.Group>
-          <Form.Group as={Col} md="6" controlId="validationCustom05">
+            <Form.Control
+              required
+              type="datetime-local"
+              min="2000-01-01T00:00"
+              value={chamado.dataInicio}
+              onChange={(e) =>
+                dispatch(
+                  atualizarValor({
+                    campo: "dataInicio",
+                    valor: e.target.value,
+                  })
+                )
+              }
+            />
             <Form.Label>Solicitante</Form.Label>
             <Form.Control
               required
               type="text"
+              value={chamado.solicitante}
               placeholder="Digite o nome do solicitante"
+              onChange={(e) =>
+                dispatch(
+                  atualizarValor({
+                    campo: "solicitante",
+                    valor: e.target.value,
+                  })
+                )
+              }
             />
-          </Form.Group>
-          <Form.Group as={Col} md="6" controlId="validationCustom06">
             <Form.Label>Criticidade revisada</Form.Label>
-            <Form.Select>
-              <option value>Selecione a criticidade do chamado</option>
-              <option value={1}>1</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-              <option value={4}>4</option>
-              <option value={5}>5</option>
-            </Form.Select>
-          </Form.Group>
-          <Form.Group as={Col} md="6" controlId="validationCustom07">
+            <select
+              className="form-select"
+              value={chamado.criticidade}
+              onChange={(e) =>
+                dispatch(
+                  atualizarValor({
+                    campo: "criticidadeRevisada",
+                    valor: e.target.value,
+                  })
+                )
+              }
+            >
+              {Object.entries(criticidades).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
             <Form.Label>Data de encerramento</Form.Label>
             <Form.Control
               required
-              min="2000-01-01"
-              max="2099-12-31"
-              type="date"
+              min="2000-01-01T00:00"
+              max="2099-12-31T00:00"
+              type="datetime-local"
+              value={chamado.dataEncerramento}
+              onChange={(e) =>
+                dispatch(
+                  atualizarValor({
+                    campo: "dataEncerramento",
+                    valor: e.target.value,
+                  })
+                )
+              }
             />
-          </Form.Group>
-          <Form.Group as={Col} md="6" controlId="validationCustom06">
             <Form.Label>Chamado encerrado?</Form.Label>
-            <Form.Check type="switch" />
-          </Form.Group>
-          <Form.Group as={Col} md="6" controlId="validationCustom08">
+            <Form.Check
+              type="switch"
+              value={chamado.chamadoEncerrado}
+              label={chamadoEncerrado ? "Sim" : "Não"}
+              checked={chamadoEncerrado}
+              onChange={handleSwitchChange}
+            ></Form.Check>
             <Form.Label>Tipo de chamado</Form.Label>
-            <Form.Select>
-              <option value>Selecione o tipo de chamado</option>
-              <option value={1}>Bug</option>
-              <option value={2}>Dúvida</option>
-              <option value={3}>Modelo de ensaio</option>
-              <option value={4}>Power BI</option>
-            </Form.Select>
+            <select
+              className="form-select"
+              value={chamado.tipoChamado}
+              onChange={(e) =>
+                dispatch(
+                  atualizarValor({
+                    campo: "tipoChamado",
+                    valor: e.target.value,
+                  })
+                )
+              }
+            >
+              <option value="">Selecione o tipo de chamado</option>
+              {Object.entries(tipoChamado).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+            <Form.Label>Descrição do chamado</Form.Label>
+            <textarea
+              id="descricaoChamado"
+              required
+              rows="3"
+              type="text"
+              value={chamado.descricaoChamado}
+              className="form-control"
+              onChange={(e) =>
+                dispatch(
+                  atualizarValor({
+                    campo: "descricaoChamado",
+                    valor: e.target.value,
+                  })
+                )
+              }
+            ></textarea>
           </Form.Group>
         </Row>
-        <Form.Group md="4" controlId="validationCustom08">
-          <Form.Label>Descrição do chamado</Form.Label>
-          <textarea
-            required
-            rows="3"
-            type="text"
-            className="form-control"
-          ></textarea>
-        </Form.Group>
+        <div className="m-1">
+          <Button size="sm" onSubmit={aoEnviar} variant="success" type="submit">
+            Enviar
+          </Button>{" "}
+          <Button size="sm" onClick={aoVoltar}>
+            Cancelar
+          </Button>
+        </div>
       </Form>
-      <div className="m-1 gap-2">
-        <Button size="sm" variant="success" type="submit">
-          Enviar
-        </Button>{" "}
-        <Button size="sm" type="submit">
-          Cancelar
-        </Button>
-      </div>
-    </main>
+    </div>
   );
 }

@@ -5,6 +5,8 @@ import CadastroPage from "./frontend/cadastros/CadastrosPage";
 import NavBar from "./frontend/components/Header";
 import SideBar from "./frontend/components/SideBar";
 import Footer from "./frontend/components/Footer";
+import Graficos from "./frontend/graficos/Graficos";
+import EditarChamado from "./frontend/editar/EditarCadastro";
 
 export default function App() {
   return (
@@ -17,6 +19,8 @@ export default function App() {
         <Routes>
           <Route exact path="/" element={<ListagemPage />} />
           <Route exact path="/novo-chamado" element={<CadastroPage />} />
+          <Route exact path="/editar-chamado/:id" element={<EditarChamado />} />
+          <Route exact path="/metricas" element={<Graficos />} />
         </Routes>
       </div>
       <Footer />

@@ -1,7 +1,6 @@
 .app-name {
   font-size: 1rem;
   text-align: center;
-  text-transform: uppercase;
 }
 
 .footer {
@@ -26,6 +25,24 @@
 .main-content {
   padding: 15px;
   margin-left: 250px;
+  min-height: 100vh;
+}
+
+.fonte-doida {
+  font-size: 13px;
+}
+
+.upper {
+  text-transform: uppercase;
+}
+
+.h4 {
+  font-size: calc(1.26rem + .12vw);
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: #598392;
+  --bs-btn-border-color: #598392;
 }
 
 .btn-primary {

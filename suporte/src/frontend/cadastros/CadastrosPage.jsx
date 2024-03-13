@@ -4,37 +4,60 @@ import {
   adicionarChamado,
   atualizarValor,
   limparForm,
+  tempoChamado,
 } from "../redux/cadastroSlice";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import { useNavigate } from "react-router";
 import {
   empresas,
   contratos,
-  criticidades,
   tipoChamado,
-} from "../constants/opcoesFormulario";
-import { useNavigate } from "react-router";
+  criticidades,
+} from "../constants/opcoesFormulario.js";
 
 export default function CadastroPage() {
   const chamado = useSelector((state) => state.chamado);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const formatarDataParaServer = (data) => {
+    if (!data) return "";
+    const dataFormatada = new Date(data);
+    return dataFormatada.toISOString();
+  };
+
   async function aoEnviar(e) {
     e.preventDefault();
+
+    if (!chamado) {
+      console.error("chamado is undefined");
+      return;
+    }
 
     const novoChamado = { ...chamado, chamadoEncerrado: chamadoEncerrado };
 
     dispatch(adicionarChamado(novoChamado));
+
+    const dataInicioFormatted = formatarDataParaServer(
+      new Date(chamado.dataInicio)
+    );
+    const dataEncerramentoFormatted = formatarDataParaServer(
+      new Date(chamado.dataEncerramento)
+    );
 
     const response = await fetch("http://localhost:5000/chamados/adicionar", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(novoChamado),
+      body: JSON.stringify({
+        ...novoChamado,
+        dataInicio: dataInicioFormatted,
+        dataEncerramento: dataEncerramentoFormatted,
+      }),
     });
 
     if (response.status === 400) {
@@ -48,6 +71,7 @@ export default function CadastroPage() {
     }
 
     dispatch(limparForm());
+    dispatch(tempoChamado(novoChamado));
     navigate("/");
   }
 
@@ -58,8 +82,12 @@ export default function CadastroPage() {
 
   const [chamadoEncerrado, setChamadoEncerrado] = useState(false);
 
-  const handleSwitchChange = () => {
-    setChamadoEncerrado(!chamadoEncerrado);
+  const handleSwitchChange = (e) => {
+    setChamadoEncerrado(e.target.checked);
+
+    dispatch(
+      atualizarValor({ campo: "chamadoEncerrado", valor: e.target.checked })
+    );
   };
 
   return (
@@ -192,14 +220,7 @@ export default function CadastroPage() {
               type="switch"
               label={chamadoEncerrado ? "Sim" : "Não"}
               checked={chamadoEncerrado}
-              onChange={(e) =>
-                dispatch(
-                  atualizarValor({
-                    campo: "chamadoEncerrado",
-                    valor: e.target.checked,
-                  })
-                )
-              }
+              onChange={handleSwitchChange}
             ></Form.Check>
             <Form.Label>Tipo de chamado</Form.Label>
             <select
@@ -213,7 +234,7 @@ export default function CadastroPage() {
                 )
               }
             >
-              <option value>Selecione o tipo de chamado</option>
+              <option value="">Selecione o tipo de chamado</option>
               {Object.entries(tipoChamado).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}

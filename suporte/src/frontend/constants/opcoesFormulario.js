@@ -1,4 +1,4 @@
-export const contratos = {
+const contratos = {
   1: "CBMM",
   2: "Chammas novo",
   3: "Chammas antigo",
@@ -13,7 +13,7 @@ export const contratos = {
   12: "Gerdau",
 };
 
-export const empresas = {
+const empresas = {
   1: "CBMM",
   2: "Reta",
   3: "Vale",
@@ -25,7 +25,7 @@ export const empresas = {
   9: "Samarco",
 };
 
-export const criticidades = {
+const criticidades = {
   1: "1",
   2: "2",
   3: "3",
@@ -33,9 +33,11 @@ export const criticidades = {
   5: "5",
 };
 
-export const tipoChamado = {
+const tipoChamado = {
   1: "Bug",
   2: "Modelo de ensaio",
   3: "Dúvida",
   4: "Power BI",
 };
+
+module.exports = {contratos, empresas, criticidades, tipoChamado }
