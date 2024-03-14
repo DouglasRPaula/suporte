@@ -6,7 +6,7 @@ export default function SideBar() {
         </div>
   
         <li className="nav-item">
-          <a className="nav-link text-dark" href="/">
+          <a className="nav-link text-dark" href="/chamados">
             Chamados
           </a>
         </li>

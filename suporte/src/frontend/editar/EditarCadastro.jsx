@@ -4,7 +4,7 @@ import {
   atualizarValor,
   limparForm,
   preencherChamados,
-} from "../redux/cadastroSlice";
+} from "../redux/chamadosSlice.js";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -30,8 +30,8 @@ export default function EditarChamado() {
   };
 
   useEffect(() => {
-    async function fetchata() {
-      const id = params.id.toString();
+    async function fetchData() {
+      const id = params.id;
       const response = await fetch(
         `http://localhost:5000/chamados/${params.id}`
       );
@@ -52,7 +52,7 @@ export default function EditarChamado() {
       dispatch(preencherChamados(chamado));
     }
 
-    fetchata();
+    fetchData();
   }, [params.id, navigate, dispatch]);
 
   async function aoEnviar(e) {
@@ -92,48 +92,12 @@ export default function EditarChamado() {
     });
 
     dispatch(limparForm());
-    navigate("/");
+    navigate("/chamados");
   }
-
-  // async function aoEnviar(e) {
-  //   e.preventDefault();
-
-  //   if (!chamado) {
-  //     console.error("chamado is undefined");
-  //     return;
-  //   }
-
-  //   const novoChamado = { ...chamado, chamadoEncerrado: chamadoEncerrado };
-
-  //   dispatch(adicionarChamado(novoChamado));
-
-  //   const response = await fetch("http://localhost:5000/chamados/adicionar", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       ...novoChamado,
-  //     }),
-  //   });
-
-  //   if (response.status === 400) {
-  //     const data = await response.json();
-  //     dispatch(
-  //       atualizarValor({
-  //         error: data.error,
-  //       })
-  //     );
-  //     return;
-  //   }
-
-  //   dispatch(tempoChamado(novoChamado));
-  //   navigate("/");
-  // }
 
   const aoVoltar = (e) => {
     e.preventDefault();
-    navigate("/");
+    navigate("/chamados");
   };
 
   const [chamadoEncerrado, setChamadoEncerrado] = useState(false);
@@ -246,7 +210,7 @@ export default function EditarChamado() {
             <Form.Label>Criticidade revisada</Form.Label>
             <select
               className="form-select"
-              value={chamado.criticidade}
+              value={chamado.criticidadeRevisada}
               onChange={(e) =>
                 dispatch(
                   atualizarValor({

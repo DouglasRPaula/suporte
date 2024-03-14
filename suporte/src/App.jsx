@@ -17,7 +17,7 @@ export default function App() {
       </div>
       <div className="main-content">
         <Routes>
-          <Route exact path="/" element={<ListagemPage />} />
+          <Route exact path="/chamados" element={<ListagemPage />} />
           <Route exact path="/novo-chamado" element={<CadastroPage />} />
           <Route exact path="/editar-chamado/:id" element={<EditarChamado />} />
           <Route exact path="/metricas" element={<Graficos />} />

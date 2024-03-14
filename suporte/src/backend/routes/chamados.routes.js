@@ -3,10 +3,6 @@ const router = express.Router();
 
 const Chamados = require("../schemas/chamados.Schema");
 
-router.get("/", (req, res) => {
-  res.json({ message: "im in" });
-});
-
 router.get("/chamados", async (req, res) => {
   try {
     const chamados = await Chamados.find();

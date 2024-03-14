@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import chamadoSlice from "./cadastroSlice";
+import chamadoSlice from "./chamadosSlice";
 
 const store = configureStore({
   reducer: {

@@ -38,16 +38,16 @@ const chamadoSlice = createSlice({
     criticidadeRevisada: "",
     dataEncerramento: "",
     chamadoEncerrado: "",
-    tipoChamado: "",
     descricaoChamado: "",
+    tempoChamado: "",
     chamados: [],
+    currentPage: 1,
     opcoes: {
       empresas,
       contratos,
       tipoChamado,
       criticidades,
     },
-    tempoChamado: "",
   },
   reducers: {
     atualizarValor: (state, action) => {
@@ -97,10 +97,6 @@ const chamadoSlice = createSlice({
     },
     tempoChamado: (state, action) => {
       state.tempoChamado = calcularTempoChamado(action.payload);
-
-      if (state.chamado) {
-        state.chamado.tempoChamado = state.tempoChamado;
-      }
     },
     deletarChamado: (state, action) => {
       const idChamadoExcluir = action.payload;
@@ -108,6 +104,9 @@ const chamadoSlice = createSlice({
         (chamado) => chamado._id !== idChamadoExcluir
       );
     },
+    setCurrentPage(state, action) {
+      state.currentPage = action.payload;
+    }
   },
 });
 
@@ -119,5 +118,6 @@ export const {
   preencherChamados,
   tempoChamado,
   deletarChamado,
+  setCurrentPage,
 } = chamadoSlice.actions;
 export default chamadoSlice.reducer;

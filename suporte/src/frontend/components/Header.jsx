@@ -1,4 +1,6 @@
 import Image from "react-bootstrap/Image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 
 export default function NavBar() {
@@ -16,13 +18,16 @@ export default function NavBar() {
         className="main-navbar navbar navbar-dark flex-nowarp icons-light"
         style={customNavbarColor}
       >
-        <div className="ml-3">
+        <div className="margin">
+          <a href="/" className="d-none d-lg-inline mr-3 text-light">
+          <FontAwesomeIcon icon={faBars} size="lg" />
+          </a>
           <a className="navbar-brand" href="/">
             <Image
-              src={require("../../assets/geolabor-branco-simples.png")}
+              src={require("../../assets/sla-tracker.png")}
               alt="logo"
               className="mr-1 ms-2 mb-2"
-              style={{ height: "23px" }}
+              style={{ height: "30px" }}
             />
           </a>
         </div>

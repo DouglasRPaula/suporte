@@ -1,13 +1,18 @@
 import { useEffect } from "react";
 import { Button, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { listaChamados, deletarChamado } from "../redux/cadastroSlice";
+import {
+  listaChamados,
+  deletarChamado,
+  setCurrentPage,
+} from "../redux/chamadosSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 export default function ListagemPage() {
   const chamados = useSelector((state) => state.chamado.chamados);
+  const paginaAtual = useSelector((state) => state.chamado.currentPage);
   const dispatch = useDispatch();
   const tempoChamado = useSelector((state) => state.chamado.tempoChamado);
 
@@ -67,6 +72,13 @@ export default function ListagemPage() {
     return dataHoraFormatada;
   };
 
+  const indexOfLastChamado = paginaAtual * 10;
+  const indexOfFirstChamado = indexOfLastChamado - 10;
+  const currentChamados = chamados.slice(
+    indexOfFirstChamado,
+    indexOfLastChamado
+  );
+
   return (
     <div>
       <div className="my-2 app-name">
@@ -104,7 +116,7 @@ export default function ListagemPage() {
             </tr>
           </thead>
           <tbody>
-            {chamados.map((chamado) => (
+            {currentChamados.map((chamado) => (
               <tr key={chamado._id}>
                 <td>#{chamado.numeroChamado}</td>
                 <td>{chamado.empresa}</td>
@@ -134,6 +146,19 @@ export default function ListagemPage() {
             ))}
           </tbody>
         </Table>
+      </div>
+      <div className="btn-group btn-group-sm" role="group">
+        {Array.from({ length: Math.ceil(chamados.length / 10) }, (_, i) => (
+          <button
+            key={i + 1}
+            onClick={() => dispatch(setCurrentPage(i + 1))}
+            disabled={paginaAtual === i + 1}
+            className="btn btn-outline-dark"
+            type="button"
+          >
+            {i + 1}
+          </button>
+        ))}
       </div>
     </div>
   );

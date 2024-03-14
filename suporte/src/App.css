@@ -32,6 +32,16 @@
   font-size: 13px;
 }
 
+.nav-brand {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.margin {
+  margin-left: 10px;
+}
+
 .upper {
   text-transform: uppercase;
 }

@@ -5,7 +5,7 @@ import {
   atualizarValor,
   limparForm,
   tempoChamado,
-} from "../redux/cadastroSlice";
+} from "../redux/chamadosSlice.js";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -72,12 +72,12 @@ export default function CadastroPage() {
 
     dispatch(limparForm());
     dispatch(tempoChamado(novoChamado));
-    navigate("/");
+    navigate("/chamados");
   }
 
   const aoVoltar = (e) => {
     e.preventDefault();
-    navigate("/");
+    navigate("/chamados");
   };
 
   const [chamadoEncerrado, setChamadoEncerrado] = useState(false);
@@ -119,6 +119,7 @@ export default function CadastroPage() {
             <Form.Label>Empresa</Form.Label>
             <select
               className="form-select"
+              required
               onChange={(e) =>
                 dispatch(
                   atualizarValor({
@@ -128,7 +129,9 @@ export default function CadastroPage() {
                 )
               }
             >
-              <option value="">Selecione uma empresa</option>
+              <option value="" selected disabled>
+                Selecione uma empresa
+              </option>
               {Object.entries(empresas).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
@@ -139,6 +142,7 @@ export default function CadastroPage() {
             <Form.Label>Contrato</Form.Label>
             <select
               className="form-select"
+              required
               onChange={(e) =>
                 dispatch(
                   atualizarValor({
@@ -148,6 +152,9 @@ export default function CadastroPage() {
                 )
               }
             >
+              <option value="" selected disabled>
+                Selecione um contrato
+              </option>
               {Object.entries(contratos).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
@@ -184,6 +191,7 @@ export default function CadastroPage() {
             />
             <Form.Label>Criticidade revisada</Form.Label>
             <select
+              required
               className="form-select"
               onChange={(e) =>
                 dispatch(
@@ -194,6 +202,9 @@ export default function CadastroPage() {
                 )
               }
             >
+              <option value="" selected disabled>
+                Selecione a criticidade
+              </option>
               {Object.entries(criticidades).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
@@ -224,6 +235,7 @@ export default function CadastroPage() {
             ></Form.Check>
             <Form.Label>Tipo de chamado</Form.Label>
             <select
+              required
               className="form-select"
               onChange={(e) =>
                 dispatch(
@@ -234,7 +246,9 @@ export default function CadastroPage() {
                 )
               }
             >
-              <option value="">Selecione o tipo de chamado</option>
+              <option value="" disabled selected>
+                Selecione o tipo de chamado
+              </option>
               {Object.entries(tipoChamado).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
