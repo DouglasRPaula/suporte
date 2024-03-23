@@ -42,6 +42,24 @@
   margin-left: 10px;
 }
 
+.loader {
+  width: 20px;
+  --b: 3px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 1px;
+  background: conic-gradient(#0000 10%, #f03355) content-box;
+  -webkit-mask-composite: destination-in;
+  mask-composite: intersect;
+  animation: l4 1s infinite steps(10);
+}
+
+@keyframes l4 {
+  to {
+      transform: rotate(1turn)
+  }
+}
+
 .upper {
   text-transform: uppercase;
 }

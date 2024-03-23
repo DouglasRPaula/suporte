@@ -3,16 +3,16 @@ export default function Footer() {
     <footer className="footer">
       <div className="text-muted">
         © {getAnoStr()}{" "}
-        <a href="https://geolabor.com.br" className="text-light">
-          Geolabor
+        <a href="https://github.com/DouglasRPaula" className="text-light">
+          SLA - Tracker
         </a>
       </div>
 
       <div className="text-muted">
         <small>
-          Versão atual: <strong>XXXX</strong>. Desenvolvido por
-          <a href="/" className="text-light">
-            SimpleLab
+          Versão atual: <strong>XXXX</strong>. Desenvolvido por {" "}
+          <a href="https://www.linkedin.com/in/douglasrp/" className="text-light">
+             Douglas R.
           </a>
         </small>
       </div>
@@ -22,7 +22,7 @@ export default function Footer() {
 
 function getAnoStr() {
   const hoje = new Date();
-  const anoInicial = 2018;
+  const anoInicial = 2022;
   const anoAtual = hoje.getFullYear();
 
   return anoAtual !== anoInicial ? `${anoInicial} - ${anoAtual}` : anoInicial;

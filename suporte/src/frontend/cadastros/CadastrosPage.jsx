@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   adicionarChamado,
@@ -17,11 +17,14 @@ import {
   tipoChamado,
   criticidades,
 } from "../constants/opcoesFormulario.js";
+import ErrorMessage from "../modal/ErrorMessage.jsx";
 
 export default function CadastroPage() {
   const chamado = useSelector((state) => state.chamado);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [chamadoEncerrado, setChamadoEncerrado] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const formatarDataParaServer = (data) => {
     if (!data) return "";
@@ -33,7 +36,19 @@ export default function CadastroPage() {
     e.preventDefault();
 
     if (!chamado) {
-      console.error("chamado is undefined");
+      setErrorMessage("chamado is undefined");
+      return;
+    }
+
+    const { dataInicio, dataEncerramento } = chamado;
+
+    const inicio = new Date(dataInicio);
+    const encerramento = new Date(dataEncerramento);
+
+    if (encerramento < inicio) {
+      setErrorMessage(
+        "A data de encerramento não pode ser anterior à data de início."
+      );
       return;
     }
 
@@ -75,20 +90,23 @@ export default function CadastroPage() {
     navigate("/chamados");
   }
 
-  const aoVoltar = (e) => {
-    e.preventDefault();
-    navigate("/chamados");
-  };
+  const aoVoltar = useCallback(
+    (e) => {
+      e.preventDefault();
+      navigate("/chamados");
+    },
+    [navigate]
+  );
 
-  const [chamadoEncerrado, setChamadoEncerrado] = useState(false);
+  const handleSwitchChange = useCallback(
+    (e) => {
+      const valor = e.target.checked;
+      setChamadoEncerrado(e.target.checked);
 
-  const handleSwitchChange = (e) => {
-    setChamadoEncerrado(e.target.checked);
-
-    dispatch(
-      atualizarValor({ campo: "chamadoEncerrado", valor: e.target.checked })
-    );
-  };
+      dispatch(atualizarValor({ campo: "chamadoEncerrado", valor }));
+    },
+    [dispatch]
+  );
 
   return (
     <div className="ml-sm-auto">
@@ -97,7 +115,8 @@ export default function CadastroPage() {
           <h1 className="h4 mb-0">Cadastro de chamados</h1>
         </div>
       </div>
-      <Form onSubmit={aoEnviar}>
+      <Form id="cadastroForm" onSubmit={aoEnviar}>
+      {errorMessage && <ErrorMessage message={errorMessage} />}
         <Row className="mb-3">
           <Form.Group as={Col} md="12">
             <Form.Label>Número do chamado</Form.Label>
@@ -274,7 +293,7 @@ export default function CadastroPage() {
           </Form.Group>
         </Row>
         <div className="m-1">
-          <Button size="sm" onSubmit={aoEnviar} variant="success" type="submit">
+          <Button size="sm" variant="success" type="submit">
             Enviar
           </Button>{" "}
           <Button size="sm" onClick={aoVoltar}>

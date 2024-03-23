@@ -1,83 +1,53 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  listaChamados,
-  deletarChamado,
-  setCurrentPage,
-} from "../redux/chamadosSlice";
+import { listaChamados } from "../redux/chamadosSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter, faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import DeleteConfirmationModal from "../modal/DeleteModal";
+import ChamadoRow from "../constants/ChamadoRow";
+import ErrorMessage from "../modal/ErrorMessage";
 
 export default function ListagemPage() {
   const chamados = useSelector((state) => state.chamado.chamados);
-  const paginaAtual = useSelector((state) => state.chamado.currentPage);
   const dispatch = useDispatch();
-  const tempoChamado = useSelector((state) => state.chamado.tempoChamado);
+  const [showModal, setShowModal] = useState(false);
+  const [chamadoId, setChamadoId] = useState(null);
 
-  useEffect(() => {
-    async function pegarChamados() {
-      try {
-        const response = await fetch(`http://localhost:5000/chamados`);
+  const handleOpenModal = useCallback((id) => {
+    setChamadoId(id);
+    setShowModal(true);
+  }, []);
 
-        if (!response.ok) {
-          const message = `Ocorreu um  erro: ${response.statusText}`;
-          window.alert(message);
-          return;
-        }
+  const handleCloseModal = useCallback(() => {
+    setShowModal(false);
+    setChamadoId(null);
+  }, []);
 
-        const data = await response.json();
-        console.log("dados recebidos", data);
-        dispatch(listaChamados(data));
-      } catch (error) {
-        console.error("erro ao pegar chamados:", error);
+  const pegarChamados = useCallback(async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/chamados`);
+
+      if (!response.ok) {
+        ErrorMessage(`Ocorreu um  erro: ${response.statusText}`);
+        return;
       }
+
+      const data = await response.json();
+      const chamadosOrdenados = data.sort(
+        (a, b) => new Date(b.dataInicio) - new Date(a.dataInicio)
+      );
+
+      dispatch(listaChamados(chamadosOrdenados));
+    } catch (error) {
+      ErrorMessage("erro ao pegar chamados:", error);
     }
-    pegarChamados();
   }, [dispatch]);
 
-  const handleExcluirChamado = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:5000/chamados/${id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        dispatch(deletarChamado(id));
-      } else {
-        const data = await response.json();
-        window.alert(`Erro ao excluir chamado: ${data.error}`);
-      }
-    } catch (error) {
-      console.error("Erro ao excluir chamado:", error);
-      window.alert(
-        "Erro ao excluir chamado. Verifique o console para mais detalhes."
-      );
-    }
-  };
-
-  const formatarData = (data) => {
-    if (!data) return "";
-    const dataFormatada = new Date(data);
-
-    const dia = String(dataFormatada.getDate()).padStart(2, "0");
-    const mes = String(dataFormatada.getMonth() + 1).padStart(2, "0");
-    const ano = dataFormatada.getFullYear();
-    const hora = String(dataFormatada.getHours()).padStart(2, "0");
-    const minutos = String(dataFormatada.getMinutes()).padStart(2, "0");
-
-    const dataHoraFormatada = `${dia}/${mes}/${ano} ${hora}:${minutos}`;
-
-    return dataHoraFormatada;
-  };
-
-  const indexOfLastChamado = paginaAtual * 10;
-  const indexOfFirstChamado = indexOfLastChamado - 10;
-  const currentChamados = chamados.slice(
-    indexOfFirstChamado,
-    indexOfLastChamado
-  );
+  useEffect(() => {
+    pegarChamados();
+  }, [pegarChamados]);
 
   return (
     <div>
@@ -100,7 +70,7 @@ export default function ListagemPage() {
       <div className="overflow-auto">
         <Table striped className="fonte-doida">
           <thead>
-            <tr>
+            <tr style={{ textAlign: "center" }}>
               <th>Número do chamado</th>
               <th>Empresa</th>
               <th>Contrato</th>
@@ -116,50 +86,24 @@ export default function ListagemPage() {
             </tr>
           </thead>
           <tbody>
-            {currentChamados.map((chamado) => (
-              <tr key={chamado._id}>
-                <td>#{chamado.numeroChamado}</td>
-                <td>{chamado.empresa}</td>
-                <td>{chamado.contrato}</td>
-                <td>{formatarData(chamado.dataInicio)}</td>
-                <td>{chamado.solicitante}</td>
-                <td>{chamado.criticidadeRevisada}</td>
-                <td>{formatarData(chamado.dataEncerramento)}</td>
-                <td>{chamado.chamadoEncerrado ? "Sim" : "Não"}</td>
-                <td>{chamado.tipoChamado}</td>
-                <td>{chamado.descricaoChamado}</td>
-                <td>{chamado.tempoChamado || tempoChamado}</td>
-                <td className="text-center text-nowrap align-middle no-print">
-                  <Link to={`/editar-chamado/${chamado._id}`}>
-                    <button className="bg-transparent border-0 px-0 mr-1">
-                      <FontAwesomeIcon icon={faPencil} fixedWidth />
-                    </button>
-                  </Link>
-                  <button
-                    className="bg-transparent border-0 px-0 mr-1"
-                    onClick={() => handleExcluirChamado(chamado._id)}
-                  >
-                    <FontAwesomeIcon icon={faTrash} fixedWidth />
-                  </button>
-                </td>
-              </tr>
+            {chamados.map((chamado) => (
+              <ChamadoRow
+                key={chamado._id}
+                chamado={chamado}
+                handleOpenModal={handleOpenModal}
+              />
             ))}
           </tbody>
         </Table>
       </div>
-      <div className="btn-group btn-group-sm" role="group">
-        {Array.from({ length: Math.ceil(chamados.length / 10) }, (_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => dispatch(setCurrentPage(i + 1))}
-            disabled={paginaAtual === i + 1}
-            className="btn btn-outline-dark"
-            type="button"
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
+      <DeleteConfirmationModal
+        show={showModal}
+        onClose={handleCloseModal}
+        onConfirm={() => {
+          handleCloseModal();
+        }}
+        chamadoId={chamadoId}
+      />
     </div>
   );
 }

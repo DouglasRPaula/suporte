@@ -5,7 +5,7 @@ const Chamados = require("../schemas/chamados.Schema");
 
 router.get("/chamados", async (req, res) => {
   try {
-    const chamados = await Chamados.find();
+    const chamados = await Chamados.find()
 
     res.status(200).json(chamados);
   } catch (error) {

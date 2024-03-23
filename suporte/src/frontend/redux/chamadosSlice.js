@@ -8,23 +8,48 @@ import {
 } from "../constants/opcoesFormulario.js";
 
 const calcularTempoChamado = (chamado) => {
-  if (chamado.dataInicio && chamado.dataEncerramento) {
-    const dataInicio = new Date(chamado.dataInicio);
-    const dataEncerramento = new Date(chamado.dataEncerramento);
-
-    const diferencaEmMilissegundos = dataEncerramento - dataInicio;
-    const dias = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));
-    const horas = Math.floor(
-      (diferencaEmMilissegundos % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutos = Math.floor(
-      (diferencaEmMilissegundos % (1000 * 60 * 60)) / (1000 * 60)
-    );
-
-    return `${dias}d ${horas}h ${minutos}min`;
+  if (!chamado.dataInicio || !chamado.dataEncerramento) {
+    return "Dados de início ou encerramento inválidos";
   }
 
-  return "";
+  const dataInicio = new Date(chamado.dataInicio);
+  const dataEncerramento = new Date(chamado.dataEncerramento);
+
+  const inicioHorarioComercial = new Date(dataInicio);
+  inicioHorarioComercial.setHours(7, 0, 0, 0);
+
+  const fimHorarioComercial = new Date(dataEncerramento);
+  fimHorarioComercial.setHours(18, 0, 0, 0);
+
+  let tempoDentroHorarioComercial = 0;
+
+  let dataAtual = new Date(dataInicio);
+
+  while (dataAtual < dataEncerramento) {
+    if (dataAtual.getDay() !== 0 && dataAtual.getDay() !== 6) {
+      const inicioDoDia = new Date(dataAtual);
+      inicioDoDia.setHours(0, 0, 0, 0);
+
+      const fimDoDia = new Date(dataAtual);
+      fimDoDia.setHours(23, 59, 59, 999);
+
+      const inicioIntervalo = Math.max(dataInicio, inicioDoDia);
+      const fimIntervalo = Math.min(dataEncerramento, fimDoDia);
+
+      if (inicioIntervalo < fimIntervalo) {
+        tempoDentroHorarioComercial += fimIntervalo - inicioIntervalo;
+      }
+    }
+
+    dataAtual.setDate(dataAtual.getDate() + 1);
+  }
+
+  const horas = Math.floor(tempoDentroHorarioComercial / (60 * 60 * 1000));
+  const minutos = Math.floor(
+    (tempoDentroHorarioComercial % (60 * 60 * 1000)) / (60 * 1000)
+  );
+
+  return `${horas}h:${minutos}min`;
 };
 
 const chamadoSlice = createSlice({
@@ -41,13 +66,15 @@ const chamadoSlice = createSlice({
     descricaoChamado: "",
     tempoChamado: "",
     chamados: [],
-    currentPage: 1,
+    loading: false,
+    error: null,
     opcoes: {
       empresas,
       contratos,
       tipoChamado,
       criticidades,
     },
+    tipoChamadoSelecionado: "",
   },
   reducers: {
     atualizarValor: (state, action) => {
@@ -71,13 +98,16 @@ const chamadoSlice = createSlice({
       state.tipoChamado = "";
       state.descricaoChamado = "";
     },
+    selecionarTipoChamado: (state, action) => {
+      state.tipoChamadoSelecionado = action.payload;
+    },
     adicionarChamado: (state, action) => {
       state.chamados.push(action.payload);
     },
     listaChamados: (state, action) => {
-      const registros = action.payload;
-      if (Array.isArray(registros)) {
-        state.chamados = registros;
+      const chamados = action.payload;
+      if (Array.isArray(chamados)) {
+        state.chamados = chamados;
       }
     },
     preencherChamados: (state, action) => {
@@ -104,9 +134,6 @@ const chamadoSlice = createSlice({
         (chamado) => chamado._id !== idChamadoExcluir
       );
     },
-    setCurrentPage(state, action) {
-      state.currentPage = action.payload;
-    }
   },
 });
 
@@ -118,6 +145,6 @@ export const {
   preencherChamados,
   tempoChamado,
   deletarChamado,
-  setCurrentPage,
+  selecionarTipoChamado,
 } = chamadoSlice.actions;
 export default chamadoSlice.reducer;
