@@ -1,78 +1,50 @@
-import { useState } from "react";
+export default function Paginacao({
+  chamadosPorPagina,
+  totalChamados,
+  paginate,
+  currentPage,
+}) {
+  const maxPagesToShow = 5;
 
-export default function useControls({ totalOfPages, controlsOffset = 5 }) {
-  const [currentPage, setCurrentPage] = useState(1);
-
-  function next() {
-    const isLastPage = currentPage >= totalOfPages;
-
-    isLastPage
-      ? setCurrentPage(() => totalOfPages)
-      : setCurrentPage(() => currentPage + 1);
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(totalChamados / chamadosPorPagina); i++) {
+    pageNumbers.push(i);
   }
 
-  function prev() {
-    currentPage <= 1
-      ? setCurrentPage(() => 1)
-      : setCurrentPage((prevState) => prevState - 1);
+  let startIndex = Math.max(currentPage - 2, 0);
+  const endIndex = Math.min(startIndex + maxPagesToShow, pageNumbers.length);
+  if (endIndex - startIndex < maxPagesToShow && startIndex > 0) {
+    startIndex = endIndex - maxPagesToShow;
   }
-
-  function goTo(targetPage) {
-    targetPage > totalOfPages
-      ? setCurrentPage(() => totalOfPages)
-      : setCurrentPage(() => (targetPage < 1 ? 1 : targetPage));
-  }
-
-  function calculateMaxVisible() {
-    let maxLeft = currentPage - Math.floor(controlsOffset / 2);
-    let maxRight = currentPage + Math.floor(controlsOffset / 2);
-
-    if (maxLeft < 1) {
-      maxLeft = 1;
-      maxRight = controlsOffset;
-    }
-    if (maxRight > totalOfPages) {
-      maxLeft = totalOfPages - (controlsOffset - 1);
-      maxRight = totalOfPages;
-
-      if (maxLeft < 1) {
-        maxLeft = 1;
-      }
-    }
-
-    return { maxLeft, maxRight };
-  }
-
-  function renderControlIndexes() {
-    const { maxLeft, maxRight } = calculateMaxVisible();
-
-    let indexes = [];
-
-    for (let page = maxLeft; page <= maxRight; page++) {
-      indexes.push(page);
-    }
-
-    return indexes.map((index) => (
-      <button key={index} onClick={() => goTo(index)}>
-        {index}
-      </button>
-    ));
-  }
-
-  function renderControls() {
-    return (
-      <section>
-        <button onClick={() => goTo(0)}>«</button>
-        <button onClick={prev}>{"<"}</button>
-        {renderControlIndexes()}
-        <button onClick={next}>{">"}</button>
-        <button onClick={() => goTo(totalOfPages)}>»</button>
-      </section>
-    );
-  }
-
-  return {
-    currentPage,
-    renderControls,
-  };
+  return (
+    <nav>
+      <ul className="pagination">
+        <li className="page-item">
+          <button
+            onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+            className="page-link"
+          >
+            &laquo;
+          </button>
+        </li>
+        {pageNumbers.slice(startIndex, endIndex).map((number) => (
+          <li key={number} className={`page-item ${number === currentPage ? 'active' : ''}`}>
+            <button onClick={() => paginate(number)} className="page-link">
+              {number}
+            </button>
+          </li>
+        ))}
+        <li className="page-item">
+          <button
+            onClick={() =>
+              currentPage < pageNumbers.length && paginate(currentPage + 1)
+            }
+            className="page-link"
+          >
+            &raquo;
+          </button>
+        </li>
+      </ul>
+    </nav>
+  );
 }

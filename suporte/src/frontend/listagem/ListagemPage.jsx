@@ -8,12 +8,18 @@ import { Link } from "react-router-dom";
 import DeleteConfirmationModal from "../modal/DeleteModal";
 import ChamadoRow from "../constants/ChamadoRow";
 import ErrorMessage from "../modal/ErrorMessage";
+import Paginacao from "../components/Paginacao";
 
 export default function ListagemPage() {
   const chamados = useSelector((state) => state.chamado.chamados);
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [chamadoId, setChamadoId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [chamadosPorPagina] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleOpenModal = useCallback((id) => {
     setChamadoId(id);
@@ -25,29 +31,35 @@ export default function ListagemPage() {
     setChamadoId(null);
   }, []);
 
-  const pegarChamados = useCallback(async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/chamados`);
+  const pegarChamados = useCallback(
+    async (page = 1) => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/chamados?page=${page}&limit=${chamadosPorPagina}`
+        );
 
-      if (!response.ok) {
-        ErrorMessage(`Ocorreu um  erro: ${response.statusText}`);
-        return;
+        if (!response.ok) {
+          ErrorMessage(`Ocorreu um  erro: ${response.statusText}`);
+          return;
+        }
+
+        const data = await response.json();
+        setTotalPages(data.totalPages)
+        const chamadosOrdenados = data.chamados.sort(
+          (a, b) => new Date(b.dataInicio) - new Date(a.dataInicio)
+        );
+
+        dispatch(listaChamados(chamadosOrdenados));
+      } catch (error) {
+        ErrorMessage("erro ao pegar chamados:", error);
       }
-
-      const data = await response.json();
-      const chamadosOrdenados = data.sort(
-        (a, b) => new Date(b.dataInicio) - new Date(a.dataInicio)
-      );
-
-      dispatch(listaChamados(chamadosOrdenados));
-    } catch (error) {
-      ErrorMessage("erro ao pegar chamados:", error);
-    }
-  }, [dispatch]);
+    },
+    [dispatch, chamadosPorPagina]
+  );
 
   useEffect(() => {
-    pegarChamados();
-  }, [pegarChamados]);
+    pegarChamados(currentPage);
+  }, [pegarChamados, currentPage]);
 
   return (
     <div>
@@ -103,6 +115,12 @@ export default function ListagemPage() {
           handleCloseModal();
         }}
         chamadoId={chamadoId}
+      />
+      <Paginacao
+        chamadosPorPagina={chamadosPorPagina}
+        totalChamados={totalPages * chamadosPorPagina}
+        paginate={paginate}
+        currentPage={currentPage}
       />
     </div>
   );

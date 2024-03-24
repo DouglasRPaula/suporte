@@ -11,7 +11,7 @@ export default function ChamadoRow({ chamado, handleOpenModal }) {
       <td style={{ textAlign: "center" }}>
         {formatarData(chamado.dataInicio)}
       </td>
-      <td>{chamado.solicitante}</td>
+      <td style={{ textAlign: "center" }}>{chamado.solicitante}</td>
       <td style={{ textAlign: "center" }}>{chamado.criticidadeRevisada}</td>
       <td style={{ textAlign: "center" }}>
         {formatarData(chamado.dataEncerramento)}
