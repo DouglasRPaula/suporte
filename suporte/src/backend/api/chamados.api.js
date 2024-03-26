@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:5001",
+  origin: "http://localhost:3000",
   credentials: true,
 };
 
@@ -32,6 +32,6 @@ mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("conectado ao mongodb");
-    app.listen(process.env.PORT || 5000);
+    app.listen(5000);
   })
   .catch((error) => console.log(error));

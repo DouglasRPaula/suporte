@@ -12,7 +12,7 @@ ChartJS.register(
   Legend
 );
 
-export default function ChamadosPorMes() {
+export default function CriticidadePorMes() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function ChamadosPorMes() {
       },
       title: {
         display: true,
-        text: 'Chamados por mês',
+        text: 'Criticidade por mês',
       }
     }
   }
@@ -47,9 +47,29 @@ export default function ChamadosPorMes() {
     labels,
     datasets: [
       {
-        label: 'Número de chamados',
+        label: '1',
         data: data.map(item => item.total.number({min: 0, max: 100})),
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+      {
+        label: '2',
+        data: data.map(item => item.total.number({min: 0, max: 100})),
+        backgroundColor: 'rgba(80, 235, 19, 0.5)',
+      },
+      {
+        label: '3',
+        data: data.map(item => item.total.number({min: 0, max: 100})),
+        backgroundColor: 'rgba(98, 31, 223, 0.5)',
+      },
+      {
+        label: '4',
+        data: data.map(item => item.total.number({min: 0, max: 100})),
+        backgroundColor: 'rgba(228, 241, 40, 0.5)',
+      },
+      {
+        label: '5',
+        data: data.map(item => item.total.number({min: 0, max: 100})),
+        backgroundColor: 'rgba(235, 99, 20, 0.5)',
       }
     ]
   }
