@@ -66,7 +66,7 @@ const chamadoSlice = createSlice({
     descricaoChamado: "",
     tempoChamado: "",
     chamados: [],
-    loading: false,
+    isLoading: false,
     error: null,
     opcoes: {
       empresas,
@@ -77,6 +77,13 @@ const chamadoSlice = createSlice({
     tipoChamadoSelecionado: "",
   },
   reducers: {
+    fetchChamadosStart: (state) => {
+      state.isLoading = true;
+    },
+    fetchChamadosSuccess: (state, action) => {
+      state.chamados = action.payload;
+      state.isLoading = false;
+    },
     atualizarValor: (state, action) => {
       const { campo, valor, error } = action.payload;
 
@@ -139,6 +146,8 @@ const chamadoSlice = createSlice({
 
 export const {
   adicionarChamado,
+  fetchChamadosStart,
+  fetchChamadosSuccess,
   listaChamados,
   atualizarValor,
   limparForm,

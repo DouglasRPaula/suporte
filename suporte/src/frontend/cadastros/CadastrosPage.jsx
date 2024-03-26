@@ -1,112 +1,24 @@
-import { useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  adicionarChamado,
-  atualizarValor,
-  limparForm,
-  tempoChamado,
-} from "../redux/chamadosSlice.js";
+import { useDispatch } from "react-redux";
+import Select from "./Select.js";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-import { useNavigate } from "react-router";
 import {
   empresas,
   contratos,
   tipoChamado,
   criticidades,
 } from "../constants/opcoesFormulario.js";
+import useCadastro from "../hooks/useCadastro.jsx";
 import ErrorMessage from "../modal/ErrorMessage.jsx";
+import { atualizarValor } from "../redux/chamadosSlice.js";
 
 export default function CadastroPage() {
-  const chamado = useSelector((state) => state.chamado);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [chamadoEncerrado, setChamadoEncerrado] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const formatarDataParaServer = (data) => {
-    if (!data) return "";
-    const dataFormatada = new Date(data);
-    return dataFormatada.toISOString();
-  };
-
-  async function aoEnviar(e) {
-    e.preventDefault();
-
-    if (!chamado) {
-      setErrorMessage("chamado is undefined");
-      return;
-    }
-
-    const { dataInicio, dataEncerramento } = chamado;
-
-    const inicio = new Date(dataInicio);
-    const encerramento = new Date(dataEncerramento);
-
-    if (encerramento < inicio) {
-      setErrorMessage(
-        "A data de encerramento não pode ser anterior à data de início."
-      );
-      return;
-    }
-
-    const novoChamado = { ...chamado, chamadoEncerrado: chamadoEncerrado };
-
-    dispatch(adicionarChamado(novoChamado));
-
-    const dataInicioFormatted = formatarDataParaServer(
-      new Date(chamado.dataInicio)
-    );
-    const dataEncerramentoFormatted = formatarDataParaServer(
-      new Date(chamado.dataEncerramento)
-    );
-
-    const response = await fetch("http://localhost:5000/chamados/adicionar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...novoChamado,
-        dataInicio: dataInicioFormatted,
-        dataEncerramento: dataEncerramentoFormatted,
-      }),
-    });
-
-    if (response.status === 400) {
-      const data = await response.json();
-      dispatch(
-        atualizarValor({
-          error: data.error,
-        })
-      );
-      return;
-    }
-
-    dispatch(limparForm());
-    dispatch(tempoChamado(novoChamado));
-    navigate("/chamados");
-  }
-
-  const aoVoltar = useCallback(
-    (e) => {
-      e.preventDefault();
-      navigate("/chamados");
-    },
-    [navigate]
-  );
-
-  const handleSwitchChange = useCallback(
-    (e) => {
-      const valor = e.target.checked;
-      setChamadoEncerrado(e.target.checked);
-
-      dispatch(atualizarValor({ campo: "chamadoEncerrado", valor }));
-    },
-    [dispatch]
-  );
+  const { chamado, errorMessage, aoEnviar, aoVoltar, handleSwitchChange } =
+    useCadastro();
+  const { chamadoEncerrado } = chamado;
 
   return (
     <div className="ml-sm-auto">
@@ -116,7 +28,7 @@ export default function CadastroPage() {
         </div>
       </div>
       <Form id="cadastroForm" onSubmit={aoEnviar}>
-      {errorMessage && <ErrorMessage message={errorMessage} />}
+        {errorMessage && <ErrorMessage message={errorMessage} />}
         <Row className="mb-3">
           <Form.Group as={Col} md="12">
             <Form.Label>Número do chamado</Form.Label>
@@ -136,9 +48,8 @@ export default function CadastroPage() {
               }
             />
             <Form.Label>Empresa</Form.Label>
-            <select
-              className="form-select"
-              required
+            <Select
+              options={empresas}
               onChange={(e) =>
                 dispatch(
                   atualizarValor({
@@ -147,21 +58,10 @@ export default function CadastroPage() {
                   })
                 )
               }
-            >
-              <option value="" selected disabled>
-                Selecione uma empresa
-              </option>
-              {Object.entries(empresas).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-
+            />
             <Form.Label>Contrato</Form.Label>
-            <select
-              className="form-select"
-              required
+            <Select
+              options={contratos}
               onChange={(e) =>
                 dispatch(
                   atualizarValor({
@@ -170,16 +70,7 @@ export default function CadastroPage() {
                   })
                 )
               }
-            >
-              <option value="" selected disabled>
-                Selecione um contrato
-              </option>
-              {Object.entries(contratos).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+            />
             <Form.Label>Data de Início</Form.Label>
             <Form.Control
               required
@@ -209,9 +100,8 @@ export default function CadastroPage() {
               }
             />
             <Form.Label>Criticidade revisada</Form.Label>
-            <select
-              required
-              className="form-select"
+            <Select
+              options={criticidades}
               onChange={(e) =>
                 dispatch(
                   atualizarValor({
@@ -220,16 +110,7 @@ export default function CadastroPage() {
                   })
                 )
               }
-            >
-              <option value="" selected disabled>
-                Selecione a criticidade
-              </option>
-              {Object.entries(criticidades).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+            />
             <Form.Label>Data de encerramento</Form.Label>
             <Form.Control
               required
@@ -253,9 +134,8 @@ export default function CadastroPage() {
               onChange={handleSwitchChange}
             ></Form.Check>
             <Form.Label>Tipo de chamado</Form.Label>
-            <select
-              required
-              className="form-select"
+            <Select
+              options={tipoChamado}
               onChange={(e) =>
                 dispatch(
                   atualizarValor({
@@ -264,16 +144,7 @@ export default function CadastroPage() {
                   })
                 )
               }
-            >
-              <option value="" disabled selected>
-                Selecione o tipo de chamado
-              </option>
-              {Object.entries(tipoChamado).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+            />
             <Form.Label>Descrição do chamado</Form.Label>
             <textarea
               id="descricaoChamado"

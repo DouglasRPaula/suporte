@@ -1,3 +1,4 @@
+require("dotenv").config();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const express = require("express");
@@ -5,7 +6,7 @@ const mongoose = require("mongoose");
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "http://localhost:5001",
   credentials: true,
 };
 
@@ -22,12 +23,15 @@ const chamadoRoutes = require("../routes/chamados.routes.js");
 
 app.use("/", chamadoRoutes);
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Algo deu errado!");
+});
+
 mongoose
-  .connect(
-    "mongodb+srv://suporteGeolabor:simplelabtech2024geo@suportegeolabor.talzfqi.mongodb.net/"
-  )
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("conectado ao mongodb");
-    app.listen(5000);
+    app.listen(process.env.PORT || 5000);
   })
   .catch((error) => console.log(error));

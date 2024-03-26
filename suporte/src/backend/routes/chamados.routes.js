@@ -24,6 +24,24 @@ router.get("/chamados", async (req, res) => {
   }
 });
 
+router.get("/chamados", async (req, res) => {
+  try {
+    const chamadosPorMes = await Chamados.aggregate([
+      {
+        $group: {
+          _id: { $month: "$dataInicio" },
+          total: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    res.status(200).json(chamadosPorMes);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+
 router.get("/chamados/:id", async (req, res) => {
   const id = req.params.id;
 

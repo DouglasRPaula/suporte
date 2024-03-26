@@ -4,6 +4,7 @@ const {
   contratos,
   tipoChamado,
 } = require("../../frontend/constants/opcoesFormulario.js");
+const calcularTempoChamado = require("../modulos/calcularTempoChamado.js");
 
 const ChamadosSchema = new mongoose.Schema({
   numeroChamado: Number,
@@ -18,23 +19,6 @@ const ChamadosSchema = new mongoose.Schema({
   descricaoChamado: String,
   tempoChamado: String,
 });
-
-const calcularTempoChamado = (chamado) => {
-  if (chamado.dataInicio && chamado.dataEncerramento) {
-    const dataInicio = new Date(chamado.dataInicio);
-    const dataEncerramento = new Date(chamado.dataEncerramento);
-
-    const diferencaEmMilissegundos = dataEncerramento - dataInicio;
-    const horas = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60));
-    const minutos = Math.floor(
-      (diferencaEmMilissegundos % (1000 * 60 * 60)) / (1000 * 60)
-    );
-
-    return `${horas}h:${minutos}min`;
-  }
-
-  return "";
-};
 
 ChamadosSchema.pre("save", function (next) {
   this.empresa = empresas[this.empresa];

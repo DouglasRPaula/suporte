@@ -2,13 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { listaChamados } from "../redux/chamadosSlice";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import DeleteConfirmationModal from "../modal/DeleteModal";
 import ChamadoRow from "../constants/ChamadoRow";
 import ErrorMessage from "../modal/ErrorMessage";
 import Paginacao from "../components/Paginacao";
+import FiltroModal from "../modal/FiltroModal";
 
 export default function ListagemPage() {
   const chamados = useSelector((state) => state.chamado.chamados);
@@ -44,7 +43,7 @@ export default function ListagemPage() {
         }
 
         const data = await response.json();
-        setTotalPages(data.totalPages)
+        setTotalPages(data.totalPages);
         const chamadosOrdenados = data.chamados.sort(
           (a, b) => new Date(b.dataInicio) - new Date(a.dataInicio)
         );
@@ -56,6 +55,27 @@ export default function ListagemPage() {
     },
     [dispatch, chamadosPorPagina]
   );
+
+  const handleFilter = (filtros) => {
+    const chamadosFiltrados = chamados.filter((chamado) => {
+      return Object.keys(filtros).every((key) => {
+        if (!filtros[key].length) {
+          return true;
+        }
+        const valorCampo =
+          typeof chamado[key] === "string"
+            ? chamado[key]
+            : typeof chamado[key] === "number"
+            ? chamado[key].toString()
+            : chamado[key] instanceof Date
+            ? chamado[key].toISOString()
+            : "";
+        return valorCampo.includes(filtros[key]);
+      });
+    });
+
+    dispatch(listaChamados(chamadosFiltrados));
+  };
 
   useEffect(() => {
     pegarChamados(currentPage);
@@ -73,10 +93,7 @@ export default function ListagemPage() {
           </div>
         </div>
         <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-          <button type="button" className="btn btn-outline-secondary btn-sm">
-            <FontAwesomeIcon icon={faFilter} fixedWidth />
-            Filtrar
-          </button>
+          <FiltroModal onFilter={handleFilter} />
         </div>
       </div>
       <div className="overflow-auto">

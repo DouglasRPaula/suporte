@@ -1,12 +1,8 @@
 import "./App.css";
-import { Route, Routes } from "react-router";
-import ListagemPage from "./frontend/listagem/ListagemPage";
-import CadastroPage from "./frontend/cadastros/CadastrosPage";
 import NavBar from "./frontend/components/Header";
 import SideBar from "./frontend/components/SideBar";
 import Footer from "./frontend/components/Footer";
-import Graficos from "./frontend/graficos/Graficos";
-import EditarChamado from "./frontend/editar/EditarCadastro";
+import RoutesComponent from "./frontend/components/RoutesComponent";
 
 export default function App() {
   return (
@@ -16,12 +12,7 @@ export default function App() {
         <SideBar />
       </div>
       <div className="main-content">
-        <Routes>
-          <Route exact path="/chamados" element={<ListagemPage />} />
-          <Route exact path="/novo-chamado" element={<CadastroPage />} />
-          <Route exact path="/editar-chamado/:id" element={<EditarChamado />} />
-          <Route exact path="/metricas" element={<Graficos />} />
-        </Routes>
+        <RoutesComponent />
       </div>
       <Footer />
     </div>
