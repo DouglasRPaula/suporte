@@ -66,6 +66,10 @@ const chamadoSlice = createSlice({
     descricaoChamado: "",
     tempoChamado: "",
     chamados: [],
+    chamadosPorMes: [],
+    chamadosPorMesECriticidade: [],
+    chamadosPorEmpresaEMes: [],
+    bugsPorEmpresa: [],
     isLoading: false,
     error: null,
     opcoes: {
@@ -83,6 +87,30 @@ const chamadoSlice = createSlice({
     fetchChamadosSuccess: (state, action) => {
       state.chamados = action.payload;
       state.isLoading = false;
+    },
+    listaChamadosPorMes: (state, action) => {
+      const chamados = action.payload;
+      if (Array.isArray(chamados)) {
+        state.chamadosPorMes = chamados;
+      }
+    },
+    listaChamadosPorMesECriticidade: (state, action) => {
+      const chamados = action.payload;
+      if (Array.isArray(chamados)) {
+        state.chamadosPorMesECriticidade = chamados;
+      }
+    },
+    listachamadosPorEmpresaEMes: (state, action) => {
+      const chamados = action.payload;
+      if (Array.isArray(chamados)) {
+        state.chamadosPorEmpresaEMes = chamados;
+      }
+    },
+    listaBugsPorEmpresa: (state, action) => {
+      const chamados = action.payload;
+      if (Array.isArray(chamados)) {
+        state.bugsPorEmpresa = chamados;
+      }
     },
     atualizarValor: (state, action) => {
       const { campo, valor, error } = action.payload;
@@ -151,6 +179,10 @@ export const {
   listaChamados,
   atualizarValor,
   limparForm,
+    listaChamadosPorMes,
+  listaChamadosPorMesECriticidade,
+  listachamadosPorEmpresaEMes,
+  listaBugsPorEmpresa,
   preencherChamados,
   tempoChamado,
   deletarChamado,
