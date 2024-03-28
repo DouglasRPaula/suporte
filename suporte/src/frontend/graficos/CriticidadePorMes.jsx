@@ -85,48 +85,46 @@ export default function CriticidadePorMes() {
     "Dezembro",
   ];
 
+  const criticidades = ["1", "2", "3", "4", "5"];
+
   const chartData = {
     labels,
-    datasets: chamados.reduce((datasets, chamado) => {
-      const dataset = datasets.find(
-        (dataset) => dataset.label === chamado._id.criticidade
-      );
-
-      if (dataset) {
-        dataset.data[chamado._id.month - 1] += chamado.total;
-      } else {
-        let backgroundColor;
-        switch (chamado._id.criticidade) {
-          case "1":
-            backgroundColor = "rgba(255, 0, 0, 0.5)";
-            break;
-          case "2":
-            backgroundColor = "rgba(255, 165, 0, 0.5)";
-            break;
-          case "3":
-            backgroundColor = "rgba(255, 255, 0, 0.5)";
-            break;
-          case "4":
-            backgroundColor = "rgba(0, 128, 0, 0.5)";
-            break;
-          case "5":
-            backgroundColor = "rgba(0, 0, 255, 0.5)";
-            break;
-          default:
-            backgroundColor = "rgba(0, 0, 0, 0.5)";
-        }
-
-        datasets.push({
-          label: chamado._id.criticidade,
-          data: new Array(12).fill(0),
-          backgroundColor,
-        });
-        datasets[datasets.length - 1].data[chamado._id.month - 1] =
-          chamado.total;
+    datasets: criticidades.map(criticidade => {
+      let backgroundColor;
+      switch (criticidade) {
+        case "1":
+          backgroundColor = "rgba(255, 0, 0, 0.5)";
+          break;
+        case "2":
+          backgroundColor = "rgba(255, 165, 0, 0.5)";
+          break;
+        case "3":
+          backgroundColor = "rgba(255, 255, 0, 0.5)";
+          break;
+        case "4":
+          backgroundColor = "rgba(0, 128, 0, 0.5)";
+          break;
+        case "5":
+          backgroundColor = "rgba(0, 0, 255, 0.5)";
+          break;
+        default:
+          backgroundColor = "rgba(0, 0, 0, 0.5)";
       }
-
-      return datasets;
-    }, []),
+  
+      const dataset = {
+        label: criticidade,
+        data: new Array(12).fill(0),
+        backgroundColor,
+      };
+  
+      chamados.forEach(chamado => {
+        if (chamado._id.criticidade === criticidade) {
+          dataset.data[chamado._id.month - 1] += chamado.total;
+        }
+      });
+  
+      return dataset;
+    }),
   };
 
   return (

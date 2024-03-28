@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 
 const ListagemPage = lazy(() => import("../listagem/ListagemPage"));
 const CadastroPage = lazy(() => import("../cadastros/CadastrosPage"));
@@ -10,6 +10,7 @@ export default function RoutesComponent() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
+        <Route path="/" element={<Navigate to="/chamados" />} />
         <Route exact path="/chamados" element={<ListagemPage />} />
         <Route exact path="/novo-chamado" element={<CadastroPage />} />
         <Route exact path="/editar-chamado/:id" element={<EditarChamado />} />
