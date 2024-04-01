@@ -12,6 +12,7 @@ import ErrorMessage from "../modal/ErrorMessage";
 import { listaChamadosPorMesECriticidade } from "../redux/chamadosSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback, useEffect } from "react";
+import { labels } from "../constants/graficos";
 
 ChartJS.register(
   CategoryScale,
@@ -23,7 +24,9 @@ ChartJS.register(
 );
 
 export default function CriticidadePorMes() {
-  const chamados = useSelector((state) => state.chamado.chamadosPorMesECriticidade);
+  const chamados = useSelector(
+    (state) => state.chamado.chamadosPorMesECriticidade
+  );
   const dispatch = useDispatch();
 
   const pegarCriticidades = useCallback(async () => {
@@ -70,59 +73,44 @@ export default function CriticidadePorMes() {
     },
   };
 
-  const labels = [
-    "Janeiro",
-    "Fevereiro",
-    "Março",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro",
-  ];
-
   const criticidades = ["1", "2", "3", "4", "5"];
 
   const chartData = {
     labels,
-    datasets: criticidades.map(criticidade => {
+    datasets: criticidades.map((criticidade) => {
       let backgroundColor;
       switch (criticidade) {
         case "1":
-          backgroundColor = "rgba(255, 0, 0, 0.5)";
+          backgroundColor = "#d62828";
           break;
         case "2":
-          backgroundColor = "rgba(255, 165, 0, 0.5)";
+          backgroundColor = "#f77f00";
           break;
         case "3":
-          backgroundColor = "rgba(255, 255, 0, 0.5)";
+          backgroundColor = "#fcbf49";
           break;
         case "4":
-          backgroundColor = "rgba(0, 128, 0, 0.5)";
+          backgroundColor = "#81b29a";
           break;
         case "5":
-          backgroundColor = "rgba(0, 0, 255, 0.5)";
+          backgroundColor = "#eae2b7";
           break;
         default:
           backgroundColor = "rgba(0, 0, 0, 0.5)";
       }
-  
+
       const dataset = {
         label: criticidade,
         data: new Array(12).fill(0),
         backgroundColor,
       };
-  
-      chamados.forEach(chamado => {
+
+      chamados.forEach((chamado) => {
         if (chamado._id.criticidade === criticidade) {
           dataset.data[chamado._id.month - 1] += chamado.total;
         }
       });
-  
+
       return dataset;
     }),
   };

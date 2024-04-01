@@ -12,6 +12,11 @@ import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import ErrorMessage from "../modal/ErrorMessage";
 import { listaBugsPorEmpresa } from "../redux/chamadosSlice";
+import {
+  empresas,
+  empresasBackgroundColors,
+  labels,
+} from "../constants/graficos";
 
 ChartJS.register(
   CategoryScale,
@@ -68,45 +73,6 @@ export default function BugsPorEmpresa() {
     },
   };
 
-  const labels = [
-    "Janeiro",
-    "Fevereiro",
-    "Março",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro",
-  ];
-
-  const empresas = [
-    "CBMM",
-    "Reta",
-    "Vale",
-    "Gerdau",
-    "JMendes",
-    "Eurochem",
-    "MCA",
-    "Chammas",
-    "Samarco",
-  ];
-
-  const backgroundColors = [
-    "rgba(39, 67, 224, 0.5)",
-    "rgba(231, 51, 51, 0.5)",
-    "rgba(243, 228, 92, 0.589)",
-    "rgba(74, 236, 147, 0.5)",
-    "rgba(243, 117, 216, 0.5)",
-    "rgba(103, 37, 209, 0.5)",
-    "rgba(240, 178, 108, 0.5)",
-    "rgba(34, 11, 245, 0.5)",
-    "rgba(255, 238, 1, 0.5)",
-  ];
-
   const normalizeData = (data) => {
     const normalizedData = [];
     empresas.forEach((empresa) => {
@@ -126,7 +92,7 @@ export default function BugsPorEmpresa() {
     datasets: empresas.map((empresa, index) => ({
       label: empresa,
       data: normalizeData(bugsPorEmpresa)[index],
-      backgroundColor: backgroundColors[index],
+      backgroundColor: empresasBackgroundColors[index],
     })),
   };
 

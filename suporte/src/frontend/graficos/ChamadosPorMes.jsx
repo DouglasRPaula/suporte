@@ -12,6 +12,7 @@ import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ErrorMessage from "../modal/ErrorMessage";
 import { listaChamadosPorMes } from "../redux/chamadosSlice";
+import { labels } from "../constants/graficos";
 
 ChartJS.register(
   CategoryScale,
@@ -68,21 +69,6 @@ export default function ChamadosPorMes() {
     },
   };
 
-  const labels = [
-    "Janeiro",
-    "Fevereiro",
-    "Março",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro",
-  ];
-
   const chartData = {
     labels,
     datasets: [
@@ -90,9 +76,9 @@ export default function ChamadosPorMes() {
         label: "Número de chamados",
         data: labels.map((month, index) => {
           const chamado = chamados.find((item) => item._id.month === index + 1);
-          return chamado ? chamado.total : 0; // Aqui está a correção
+          return chamado ? chamado.total : 0;
         }),
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        backgroundColor: "rgba(233, 23, 23, 0.521)",
       },
     ],
   };
