@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://slasuporte.vercel.app",
   credentials: true,
 };
 
