@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/chamados/adicionar", "destination": "http://localhost:5000/chamados/adicionar" }
+  ]
+}
