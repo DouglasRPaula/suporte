@@ -7,46 +7,43 @@ import {
   criticidades,
 } from "../constants/opcoesFormulario.js";
 
+const MILISEGUNDOS_POR_HORA = 1000 * 60 * 60;
+const MILISEGUNDOS_POR_MINUTO = 1000 * 60;
+const MILISEGUNDOS_POR_DIA = MILISEGUNDOS_POR_HORA * 24;
+
 const calcularTempoChamado = (chamado) => {
   if (!chamado.dataInicio || !chamado.dataEncerramento) {
     return "Dados de início ou encerramento inválidos";
   }
 
-  const dataInicio = new Date(chamado.dataInicio);
-  const dataEncerramento = new Date(chamado.dataEncerramento);
+  let dataInicio = new Date(chamado.dataInicio);
+  let dataEncerramento = new Date(chamado.dataEncerramento);
 
-  const inicioHorarioComercial = new Date(dataInicio);
-  inicioHorarioComercial.setHours(7, 0, 0, 0);
+  let diferencaEmMilissegundos = 0;
 
-  const fimHorarioComercial = new Date(dataEncerramento);
-  fimHorarioComercial.setHours(18, 0, 0, 0);
+  while (dataInicio < dataEncerramento) {
+    const diaDaSemana = dataInicio.getDay();
+    if (diaDaSemana !== 0 && diaDaSemana !== 6) {
+      // 0 é Domingo e 6 é Sábado
+      const inicioHorarioComercial = new Date(dataInicio);
+      inicioHorarioComercial.setHours(7, 0, 0, 0);
 
-  let tempoDentroHorarioComercial = 0;
+      const fimHorarioComercial = new Date(dataInicio);
+      fimHorarioComercial.setHours(18, 0, 0, 0);
 
-  let dataAtual = new Date(dataInicio);
-
-  while (dataAtual < dataEncerramento) {
-    if (dataAtual.getDay() !== 0 && dataAtual.getDay() !== 6) {
-      const inicioDoDia = new Date(dataAtual);
-      inicioDoDia.setHours(0, 0, 0, 0);
-
-      const fimDoDia = new Date(dataAtual);
-      fimDoDia.setHours(23, 59, 59, 999);
-
-      const inicioIntervalo = Math.max(dataInicio, inicioDoDia);
-      const fimIntervalo = Math.min(dataEncerramento, fimDoDia);
+      const inicioIntervalo = Math.max(dataInicio, inicioHorarioComercial);
+      const fimIntervalo = Math.min(dataEncerramento, fimHorarioComercial);
 
       if (inicioIntervalo < fimIntervalo) {
-        tempoDentroHorarioComercial += fimIntervalo - inicioIntervalo;
+        diferencaEmMilissegundos += fimIntervalo - inicioIntervalo;
       }
     }
-
-    dataAtual.setDate(dataAtual.getDate() + 1);
+    dataInicio.setTime(dataInicio.getTime() + MILISEGUNDOS_POR_DIA);
   }
 
-  const horas = Math.floor(tempoDentroHorarioComercial / (60 * 60 * 1000));
+  const horas = Math.floor(diferencaEmMilissegundos / MILISEGUNDOS_POR_HORA);
   const minutos = Math.floor(
-    (tempoDentroHorarioComercial % (60 * 60 * 1000)) / (60 * 1000)
+    (diferencaEmMilissegundos % MILISEGUNDOS_POR_HORA) / MILISEGUNDOS_POR_MINUTO
   );
 
   return `${horas}h:${minutos}min`;
@@ -179,7 +176,7 @@ export const {
   listaChamados,
   atualizarValor,
   limparForm,
-    listaChamadosPorMes,
+  listaChamadosPorMes,
   listaChamadosPorMesECriticidade,
   listachamadosPorEmpresaEMes,
   listaBugsPorEmpresa,

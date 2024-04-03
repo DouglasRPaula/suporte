@@ -6,15 +6,8 @@ export default function CalcularTempoChamado({tempoChamado}) {
     return "Dados de início ou encerramento inválidos";
   }
 
-  const inicioHorarioComercial = new Date(dataInicio);
-  inicioHorarioComercial.setHours(7, 0, 0, 0);
-
-  const fimHorarioComercial = new Date(dataEncerramento);
-  fimHorarioComercial.setHours(18, 0, 0, 0);
-
-  let tempoDentroHorarioComercial = 0;
-
   let dataAtual = new Date(dataInicio);
+  let tempoDentroHorarioComercial = 0;
 
   while (dataAtual < dataEncerramento) {
     const diaDaSemana = dataAtual.getDay();
@@ -29,7 +22,7 @@ export default function CalcularTempoChamado({tempoChamado}) {
 
   const horas = Math.floor(tempoDentroHorarioComercial);
   const minutos = Math.floor(
-    (tempoDentroHorarioComercial % 1) / 60);
+    ((tempoDentroHorarioComercial % 1) * 60));
 
   return `${horas}h:${minutos}min`;
 }

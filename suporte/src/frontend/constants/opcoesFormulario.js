@@ -25,6 +25,21 @@ const empresas = {
   9: "Samarco",
 };
 
+const tags = {
+  1: "Login",
+  2: "Cache",
+  3: "Relatório",
+  4: "Campo",
+  5: "Laboratório",
+  6: "Cliente",
+  7: "Planejamento",
+  8: "Serviços Campo",
+  9: "Tela de Ooops...",
+  10: "Ensaio",
+  11: "SQL",
+  12: "Filtro",
+};
+
 const criticidades = {
   1: "1",
   2: "2",
@@ -38,6 +53,7 @@ const tipoChamado = {
   2: "Modelo de ensaio",
   3: "Dúvida",
   4: "Power BI",
+  5: "Melhoria",
 };
 
-module.exports = {contratos, empresas, criticidades, tipoChamado }
+module.exports = { contratos, empresas, criticidades, tipoChamado, tags };

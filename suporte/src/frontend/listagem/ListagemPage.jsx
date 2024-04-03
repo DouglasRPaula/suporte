@@ -17,6 +17,7 @@ export default function ListagemPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [chamadosPorPagina] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
+  const [filtrosAtuais, setFiltrosAtuais] = useState({});
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -57,29 +58,15 @@ export default function ListagemPage() {
   );
 
   const handleFilter = (filtros) => {
-    const chamadosFiltrados = chamados.filter((chamado) => {
-      return Object.keys(filtros).every((key) => {
-        if (!filtros[key].length) {
-          return true;
-        }
-        const valorCampo =
-          typeof chamado[key] === "string"
-            ? chamado[key]
-            : typeof chamado[key] === "number"
-            ? chamado[key].toString()
-            : chamado[key] instanceof Date
-            ? chamado[key].toISOString()
-            : "";
-        return valorCampo.includes(filtros[key]);
-      });
-    });
-
-    dispatch(listaChamados(chamadosFiltrados));
+    setFiltrosAtuais(filtros);
+    pegarChamados(currentPage, filtros);
   };
 
+  
+
   useEffect(() => {
-    pegarChamados(currentPage);
-  }, [pegarChamados, currentPage]);
+    pegarChamados(currentPage, filtrosAtuais);
+  }, [pegarChamados, currentPage, filtrosAtuais]);
 
   return (
     <div>

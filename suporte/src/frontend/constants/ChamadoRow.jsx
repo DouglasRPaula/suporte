@@ -1,6 +1,6 @@
 import AcoesBotoes from "../components/AcoesBotoes";
 import formatarData from "../formatters/DateFormat";
-import TipoChamadoTag from "../formatters/Tags";
+import TipoChamadoTag from "../formatters/TipoChamadoTags";
 
 export default function ChamadoRow({ chamado, handleOpenModal }) {
   return (

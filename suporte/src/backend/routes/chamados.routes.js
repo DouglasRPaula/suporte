@@ -5,6 +5,7 @@ const Chamados = require("../schemas/chamados.Schema");
 
 router.get("/chamados", async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
+
   try {
     const chamados = await Chamados.find()
       .sort({ dataInicio: -1 })
@@ -13,7 +14,6 @@ router.get("/chamados", async (req, res) => {
       .exec();
 
     const count = await Chamados.countDocuments();
-
     res.status(200).json({
       chamados,
       totalPages: Math.ceil(count / limit),
