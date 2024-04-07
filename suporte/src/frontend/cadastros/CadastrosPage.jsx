@@ -113,7 +113,6 @@ export default function CadastroPage() {
             />
             <Form.Label>Data de encerramento</Form.Label>
             <Form.Control
-              required
               min="2000-01-01T00:00"
               max="2099-12-31T00:00"
               type="datetime-local"

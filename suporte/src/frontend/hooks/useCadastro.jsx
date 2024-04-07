@@ -19,8 +19,10 @@ export default function useCadastro() {
 
   const formatarDataParaServer = (data) => {
     if (!data) return "";
-    const dataFormatada = new Date(data);
-    return dataFormatada.toISOString();
+    if (!(data instanceof Date) || isNaN(data.getTime())) {
+      return "";
+    }
+    return data.toISOString();
   };
 
   const aoEnviar = useCallback(
