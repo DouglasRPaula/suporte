@@ -1,16 +1,15 @@
 const contratos = {
   1: "CBMM",
-  2: "Chammas novo",
-  3: "Chammas antigo",
-  4: "Vale CTO",
-  5: "Vale LIMS",
-  6: "JMendes",
-  7: "Eurochem",
-  8: "MCA",
-  9: "Samarco Projetos",
-  10: "Samarco",
-  11: "Reta",
-  12: "Gerdau",
+  2: "Chammas",
+  3: "Vale CTO",
+  4: "Vale LIMS",
+  5: "JMendes",
+  6: "Eurochem",
+  7: "MCA",
+  8: "Samarco Projetos",
+  9: "Samarco",
+  10: "Reta",
+  11: "Gerdau",
 };
 
 const empresas = {
