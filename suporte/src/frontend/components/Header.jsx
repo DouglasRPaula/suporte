@@ -25,11 +25,12 @@ export default function NavBar() {
             <Image
               src={require("../../assets/sla-tracker.png")}
               alt="logo"
-              className="mr-1 ms-2 mb-2"
-              style={{ height: "30px" }}
+              className="ms-2"
+              style={{ height: "40px" }}
             />
           </a>
         </div>
+        <strong>Beta </strong>
         <ul className="navbar-nav px-3">
           <div className="d-flex align-center"></div>
           <li className="nav-item">
