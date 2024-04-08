@@ -1,6 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/chamados/adicionar", "destination": "http://localhost:5000/novo-chamado" },
-    { "source": "/", "destination": "http://localhost:5000/chamados?page=${page}&limit=${chamadosPorPagina}" }
-  ]
-}
