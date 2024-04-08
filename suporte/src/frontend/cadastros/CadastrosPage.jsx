@@ -34,7 +34,7 @@ export default function CadastroPage() {
             <Form.Label>Número do chamado</Form.Label>
             <input
               required
-              type="number"
+              type="text"
               className="form-control"
               placeholder="Número do chamado"
               id="numeroChamado"

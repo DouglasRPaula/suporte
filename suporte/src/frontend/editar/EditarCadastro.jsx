@@ -166,7 +166,7 @@ export default function EditarChamado() {
             <input
               required
               value={chamado.numeroChamado}
-              type="number"
+              type="text"
               className="form-control"
               placeholder="Número do chamado"
               id="numeroChamado"
