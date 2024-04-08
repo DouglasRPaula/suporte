@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes, HashRouter } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router";
+import { HashRouter } from "react-router-dom";
 
 const ListagemPage = lazy(() => import("../listagem/ListagemPage"));
 const CadastroPage = lazy(() => import("../cadastros/CadastrosPage"));
