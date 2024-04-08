@@ -183,7 +183,7 @@ router.post("/chamados/adicionar", async (req, res) => {
   }
 });
 
-router.patch("/edit/:id", async (req, res) => {
+router.patch("/chamados/edit/:id", async (req, res) => {
   const id = req.params.id;
 
   const {

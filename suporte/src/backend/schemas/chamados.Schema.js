@@ -7,7 +7,7 @@ const {
 const calcularTempoChamado = require("../modulos/calcularTempoChamado.js");
 
 const ChamadosSchema = new mongoose.Schema({
-  numeroChamado: Number,
+  numeroChamado: String,
   empresa: Object,
   contrato: Object,
   dataInicio: Date,

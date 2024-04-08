@@ -2,7 +2,6 @@ import Image from "react-bootstrap/Image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 
-
 export default function NavBar() {
   const customNavbarColor = {
     backgroundColor: "#598392",
@@ -20,7 +19,7 @@ export default function NavBar() {
       >
         <div className="margin">
           <a href="/" className="d-none d-lg-inline mr-3 text-light">
-          <FontAwesomeIcon icon={faBars} size="lg" />
+            <FontAwesomeIcon icon={faBars} size="lg" />
           </a>
           <a className="navbar-brand" href="/">
             <Image
@@ -38,7 +37,6 @@ export default function NavBar() {
               <div className="dropdown" tabIndex="1">
                 <div
                   style={customButtonColor}
-                  type
                   className="btn btn-circle text-light rounded-circle d-flex align-items-center justify-content-center"
                 >
                   DP
