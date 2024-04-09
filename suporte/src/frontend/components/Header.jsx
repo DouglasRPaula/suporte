@@ -30,7 +30,6 @@ export default function NavBar() {
             />
           </a>
         </div>
-        <strong>Beta </strong>
         <ul className="navbar-nav px-3">
           <div className="d-flex align-center"></div>
           <li className="nav-item">
