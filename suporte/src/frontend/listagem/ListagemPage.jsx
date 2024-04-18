@@ -35,7 +35,10 @@ export default function ListagemPage() {
     async (page = 1) => {
       try {
         const response = await fetch(
-          `http://localhost:5000/chamados?page=${page}&limit=${chamadosPorPagina}`
+          `http://localhost:5000/chamados?page=${page}&limit=${chamadosPorPagina}`,
+          {
+            credentials: "include",
+          }
         );
 
         if (!response.ok) {
@@ -61,8 +64,6 @@ export default function ListagemPage() {
     setFiltrosAtuais(filtros);
     pegarChamados(currentPage, filtros);
   };
-
-  
 
   useEffect(() => {
     pegarChamados(currentPage, filtrosAtuais);

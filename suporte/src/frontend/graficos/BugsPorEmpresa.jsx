@@ -33,7 +33,12 @@ export default function BugsPorEmpresa() {
 
   const pegarChamados = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:5000/bugsPorEmpresa`);
+      const response = await fetch(
+        `http://localhost:5000/graficos/bugsPorEmpresa`,
+        {
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) {
         ErrorMessage(`Ocorreu um erro: ${response.statusText}`);

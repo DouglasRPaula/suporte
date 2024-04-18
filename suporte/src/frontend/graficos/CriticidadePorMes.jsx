@@ -32,7 +32,10 @@ export default function CriticidadePorMes() {
   const pegarCriticidades = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/chamadosPorMesECriticidade`
+        `http://localhost:5000/graficos/chamadosPorMesECriticidade`,
+        {
+          credentials: "include",
+        }
       );
 
       if (!response.ok) {

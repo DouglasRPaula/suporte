@@ -1,3 +1,5 @@
+import  { Link } from "react-router-dom";
+
 export default function SideBar() {
     return (
       <ul className="nav flex-column">
@@ -6,29 +8,29 @@ export default function SideBar() {
         </div>
   
         <li className="nav-item">
-          <a className="nav-link text-dark" href="/chamados">
+          <Link className="nav-link text-dark" to="/chamados">
             Chamados
-          </a>
+          </Link>
         </li>
         <li className="nav-item">
-          <a className="nav-link text-dark" href="/">
+          <Link className="nav-link text-dark" to="/">
             Melhorias
-          </a>
+          </Link>
         </li>
         <li className="nav-item">
-          <a className="nav-link text-dark" href="/">
+          <Link className="nav-link text-dark" to="/">
             Bugs
-          </a>
+          </Link>
         </li>
         <li className="nav-item">
-          <a className="nav-link text-dark" href="/">
+          <Link className="nav-link text-dark" to="/">
             Documentação
-          </a>
+          </Link>
         </li>
         <li className="nav-item">
-          <a className="nav-link text-dark" href="/metricas">
+          <Link className="nav-link text-dark" to="/metricas">
             Metricas
-          </a>
+          </Link>
         </li>
       </ul>
     );

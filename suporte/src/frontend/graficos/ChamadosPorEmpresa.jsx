@@ -12,7 +12,11 @@ import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import ErrorMessage from "../modal/ErrorMessage";
 import { listachamadosPorEmpresaEMes } from "../redux/chamadosSlice";
-import { empresas, empresasBackgroundColors, labels } from "../constants/graficos";
+import {
+  empresas,
+  empresasBackgroundColors,
+  labels,
+} from "../constants/graficos";
 
 ChartJS.register(
   CategoryScale,
@@ -24,12 +28,19 @@ ChartJS.register(
 );
 
 export default function ChamadosPorEmpresaEMes() {
-  const chamadosPorEmpresaEMes = useSelector((state) => state.chamado.chamadosPorEmpresaEMes);
+  const chamadosPorEmpresaEMes = useSelector(
+    (state) => state.chamado.chamadosPorEmpresaEMes
+  );
   const dispatch = useDispatch();
 
   const pegarChamados = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:5000/chamadosPorEmpresaEMes`);
+      const response = await fetch(
+        `http://localhost:5000/graficos/chamadosPorEmpresaEMes`,
+        {
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) {
         ErrorMessage(`Ocorreu um erro: ${response.statusText}`);
@@ -71,7 +82,7 @@ export default function ChamadosPorEmpresaEMes() {
 
   const normalizeData = (data) => {
     const normalizedData = [];
-  
+
     empresas.forEach((empresa) => {
       const empresaData = labels.map((month, index) => {
         const chamado = data.find(
@@ -81,7 +92,7 @@ export default function ChamadosPorEmpresaEMes() {
       });
       normalizedData.push(empresaData);
     });
-  
+
     return normalizedData;
   };
   const chartData = {

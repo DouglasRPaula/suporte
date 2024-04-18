@@ -1,16 +1,52 @@
 import Image from "react-bootstrap/Image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/authSlice";
+import { useLogoutMutation } from "../redux/usersApiSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function NavBar() {
+  const { userInfo } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [logoutApiCall] = useLogoutMutation();
+
+  const editUserHandler = () => {
+    navigate("/profile");
+  };
+
+  const logoutHandler = async () => {
+    try {
+      await logoutApiCall().unwrap();
+      dispatch(logout());
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const customNavbarColor = {
     backgroundColor: "#598392",
   };
-  const customButtonColor = {
+  const roundButtonStyle = {
     backgroundColor: "#124559",
+    borderRadius: "50%",
     width: "40px",
     height: "40px",
+    textAlign: "center",
+    padding: "10px",
   };
+
+  const getUserInitials = () => {
+    if (!userInfo || !userInfo.name) return "";
+    const initials = userInfo.name.match(/\b\w/g) || [];
+    return ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
+  };
+
   return (
     <div className="sticky-top">
       <div
@@ -34,16 +70,29 @@ export default function NavBar() {
           <div className="d-flex align-center"></div>
           <li className="nav-item">
             <div className="user-info">
-              <div className="dropdown" tabIndex="1">
-                <div
-                  style={customButtonColor}
-                  className="btn btn-circle text-light rounded-circle d-flex align-items-center justify-content-center"
+              <style type="text/css">
+                {`.btn.dropdown-toggle::after {display: none;}
+                  .btn.dropdown-toggle:focus {outline: none; box-shadow: none;}`}
+              </style>
+              {userInfo && (
+                <DropdownButton
+                  id="dropdown-basic-button"
+                  title={
+                    <div style={roundButtonStyle}>{getUserInitials()}</div>
+                  }
+                  drop="left"
                 >
-                  DP
-                </div>
-                <div className="dropdown-menu dropdown-menu-stateless dropdown-menu-right"></div>
-              </div>
+                  <Dropdown.Header>{userInfo.name}</Dropdown.Header>
+                  <Dropdown.Item onClick={editUserHandler}>
+                    Editar usuário
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={logoutHandler}>
+                    Desconectar
+                  </Dropdown.Item>
+                </DropdownButton>
+              )}
             </div>
+            <div className="dropdown-menu dropdown-menu-stateless dropdown-menu-right"></div>
           </li>
         </ul>
       </div>

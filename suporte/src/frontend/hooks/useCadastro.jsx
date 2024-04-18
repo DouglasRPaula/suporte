@@ -58,6 +58,7 @@ export default function useCadastro() {
       );
 
       const response = await fetch("http://localhost:5000/chamados/adicionar", {
+        credentials: 'include',
         method: "POST",
         headers: {
           "Content-Type": "application/json",

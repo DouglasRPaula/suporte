@@ -18,6 +18,7 @@ import {
 import ErrorMessage from "../modal/ErrorMessage";
 
 export default function EditarChamado() {
+  const userInfo = useSelector((state) => state.auth.userInfo);
   const chamado = useSelector((state) => state.chamado);
   const dispatch = useDispatch();
   const params = useParams();
@@ -50,7 +51,9 @@ export default function EditarChamado() {
     async function fetchData() {
       try {
         const id = params.id;
-        const response = await fetch(`http://localhost:5000/chamados/${id}`);
+        const response = await fetch(`http://localhost:5000/chamados/${id}`, {
+          credentials: "include",
+        });
         if (!response.ok) {
           throw new Error("Erro ao obter os detalhes do chamado.");
         }
@@ -98,6 +101,7 @@ export default function EditarChamado() {
         const response = await fetch(
           `http://localhost:5000/chamados/edit/${params.id}`,
           {
+            credentials: "include",
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
@@ -150,6 +154,12 @@ export default function EditarChamado() {
     },
     [dispatch]
   );
+
+  useEffect(() => {
+    if (!userInfo) {
+      navigate("/login");
+    }
+  }, [userInfo, navigate]);
 
   return (
     <div className="ml-sm-auto">

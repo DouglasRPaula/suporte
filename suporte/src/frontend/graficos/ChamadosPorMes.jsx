@@ -29,7 +29,9 @@ export default function ChamadosPorMes() {
 
   const pegarChamados = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:5000/chamadosPorMes`);
+      const response = await fetch(`http://localhost:5000/graficos/chamadosPorMes`, {
+        credentials: "include",
+      });
 
       if (!response.ok) {
         ErrorMessage(`Ocorreu um erro: ${response.statusText}`);

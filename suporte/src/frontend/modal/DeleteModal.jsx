@@ -10,6 +10,7 @@ export default function DeleteConfirmationModal({ show, onClose, chamadoId }) {
       const response = await fetch(
         `http://localhost:5000/chamados/${chamadoId}`,
         {
+          credentials: "include",
           method: "DELETE",
         }
       );
