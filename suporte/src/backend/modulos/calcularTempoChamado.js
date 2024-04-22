@@ -1,6 +1,5 @@
 const MILISEGUNDOS_POR_HORA = 1000 * 60 * 60;
 const MILISEGUNDOS_POR_MINUTO = 1000 * 60;
-const MILISEGUNDOS_POR_DIA = MILISEGUNDOS_POR_HORA * 24;
 
 const calcularTempoChamado = (chamado) => {
   if (chamado.dataInicio && chamado.dataEncerramento) {
@@ -12,27 +11,33 @@ const calcularTempoChamado = (chamado) => {
     while (dataInicio < dataEncerramento) {
       const diaDaSemana = dataInicio.getDay();
       if (diaDaSemana !== 0 && diaDaSemana !== 6) {
-        if (dataEncerramento - dataInicio > MILISEGUNDOS_POR_DIA) {
-          diferencaEmMilissegundos += MILISEGUNDOS_POR_DIA;
-          dataInicio.setTime(dataInicio.getTime() + MILISEGUNDOS_POR_DIA);
-        } else {
-          diferencaEmMilissegundos += dataEncerramento - dataInicio;
-          dataInicio = dataEncerramento;
+        const inicioHorarioComercial = new Date(dataInicio);
+        inicioHorarioComercial.setHours(8, 0, 0, 0);
+
+        const fimHorarioComercial = new Date(dataInicio);
+        fimHorarioComercial.setHours(18, 0, 0, 0);
+
+        const inicioIntervalo = Math.max(dataInicio, inicioHorarioComercial);
+        const fimIntervalo = Math.min(dataEncerramento, fimHorarioComercial);
+
+        if (inicioIntervalo < fimIntervalo) {
+          diferencaEmMilissegundos += fimIntervalo - inicioIntervalo;
         }
-      } else {
-        dataInicio.setTime(dataInicio.getTime() + MILISEGUNDOS_POR_DIA);
       }
+      dataInicio.setDate(dataInicio.getDate() + 1);
+      dataInicio.setHours(0, 0, 0, 0);
     }
 
     const horas = Math.floor(diferencaEmMilissegundos / MILISEGUNDOS_POR_HORA);
     const minutos = Math.floor(
-      (diferencaEmMilissegundos % MILISEGUNDOS_POR_HORA) / MILISEGUNDOS_POR_MINUTO
+      (diferencaEmMilissegundos % MILISEGUNDOS_POR_HORA) /
+        MILISEGUNDOS_POR_MINUTO
     );
 
     return `${horas}h:${minutos}min`;
   }
 
-  return "";
+  return "Data inválida";
 };
 
 module.exports = calcularTempoChamado;

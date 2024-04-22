@@ -111,7 +111,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(404);
-    throw new Error("usuário nào encontrado");
+    throw new Error("usuário não encontrado");
   }
 });
 

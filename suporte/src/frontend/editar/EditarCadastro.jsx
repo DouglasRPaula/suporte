@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import {
   atualizarValor,
-  limparForm,
   preencherChamados,
   tempoChamado,
 } from "../redux/chamadosSlice";
@@ -122,11 +121,12 @@ export default function EditarChamado() {
             })
           );
           return;
+        } else {
+          const updateData = await response.json();
+          dispatch(preencherChamados(updateData));
+          dispatch(tempoChamado(updateData));
+          navigate("/chamados");
         }
-
-        dispatch(limparForm());
-        dispatch(tempoChamado(chamado));
-        navigate("/chamados");
       } catch (error) {
         console.error("Erro ao editar o chamado:", error);
         setErrorMessage(

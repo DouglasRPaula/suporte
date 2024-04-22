@@ -33,7 +33,7 @@ app.use("/chamados", chamadoRoutes);
 
 app.use("/graficos", graficosRoutes);
 
-app.use("/api/users", userRoutes);
+app.use("/users", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running....");

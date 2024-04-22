@@ -6,48 +6,7 @@ import {
   tipoChamado,
   criticidades,
 } from "../constants/opcoesFormulario.js";
-
-const MILISEGUNDOS_POR_HORA = 1000 * 60 * 60;
-const MILISEGUNDOS_POR_MINUTO = 1000 * 60;
-const MILISEGUNDOS_POR_DIA = MILISEGUNDOS_POR_HORA * 24;
-
-const calcularTempoChamado = (chamado) => {
-  if (!chamado.dataInicio || !chamado.dataEncerramento) {
-    return "Dados de início ou encerramento inválidos";
-  }
-
-  let dataInicio = new Date(chamado.dataInicio);
-  let dataEncerramento = new Date(chamado.dataEncerramento);
-
-  let diferencaEmMilissegundos = 0;
-
-  while (dataInicio < dataEncerramento) {
-    const diaDaSemana = dataInicio.getDay();
-    if (diaDaSemana !== 0 && diaDaSemana !== 6) {
-      // 0 é Domingo e 6 é Sábado
-      const inicioHorarioComercial = new Date(dataInicio);
-      inicioHorarioComercial.setHours(7, 0, 0, 0);
-
-      const fimHorarioComercial = new Date(dataInicio);
-      fimHorarioComercial.setHours(18, 0, 0, 0);
-
-      const inicioIntervalo = Math.max(dataInicio, inicioHorarioComercial);
-      const fimIntervalo = Math.min(dataEncerramento, fimHorarioComercial);
-
-      if (inicioIntervalo < fimIntervalo) {
-        diferencaEmMilissegundos += fimIntervalo - inicioIntervalo;
-      }
-    }
-    dataInicio.setTime(dataInicio.getTime() + MILISEGUNDOS_POR_DIA);
-  }
-
-  const horas = Math.floor(diferencaEmMilissegundos / MILISEGUNDOS_POR_HORA);
-  const minutos = Math.floor(
-    (diferencaEmMilissegundos % MILISEGUNDOS_POR_HORA) / MILISEGUNDOS_POR_MINUTO
-  );
-
-  return `${horas}h:${minutos}min`;
-};
+import calcularTempoChamado from "../../backend/modulos/calcularTempoChamado.js";
 
 const chamadoSlice = createSlice({
   name: "chamado",
@@ -78,13 +37,6 @@ const chamadoSlice = createSlice({
     tipoChamadoSelecionado: "",
   },
   reducers: {
-    fetchChamadosStart: (state) => {
-      state.isLoading = true;
-    },
-    fetchChamadosSuccess: (state, action) => {
-      state.chamados = action.payload;
-      state.isLoading = false;
-    },
     listaChamadosPorMes: (state, action) => {
       const chamados = action.payload;
       if (Array.isArray(chamados)) {
@@ -155,7 +107,7 @@ const chamadoSlice = createSlice({
       state.opcoes = chamado.opcoes;
       state.tipoChamado = chamado.tipoChamado;
       state.descricaoChamado = chamado.descricaoChamado;
-      state.tempoChamado = chamado.tempoChamado;
+      state.tempoChamado = calcularTempoChamado(chamado);
     },
     tempoChamado: (state, action) => {
       state.tempoChamado = calcularTempoChamado(action.payload);
@@ -171,8 +123,6 @@ const chamadoSlice = createSlice({
 
 export const {
   adicionarChamado,
-  fetchChamadosStart,
-  fetchChamadosSuccess,
   listaChamados,
   atualizarValor,
   limparForm,
