@@ -23,7 +23,7 @@ ChartJS.register(
   Legend
 );
 
-export default function CriticidadePorMes() {
+export default function CriticidadePorMes({ ano }) {
   const chamados = useSelector(
     (state) => state.chamado.chamadosPorMesECriticidade
   );
@@ -32,7 +32,7 @@ export default function CriticidadePorMes() {
   const pegarCriticidades = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/graficos/chamadosPorMesECriticidade`,
+        `http://localhost:5000/graficos/chamadosPorMesECriticidade?ano=${ano}`,
         {
           credentials: "include",
         }
@@ -48,11 +48,11 @@ export default function CriticidadePorMes() {
     } catch (error) {
       ErrorMessage("erro ao pegar chamados:", error);
     }
-  }, [dispatch]);
+  }, [dispatch, ano]);
 
   useEffect(() => {
     pegarCriticidades();
-  }, [pegarCriticidades]);
+  }, [pegarCriticidades, ano]);
 
   const options = {
     responsive: true,
@@ -120,7 +120,7 @@ export default function CriticidadePorMes() {
 
   return (
     <div style={{ width: "45%", height: "450px" }}>
-      <Bar options={options} data={chartData} />
+      <Bar key={ano} options={options} data={chartData} />
     </div>
   );
 }

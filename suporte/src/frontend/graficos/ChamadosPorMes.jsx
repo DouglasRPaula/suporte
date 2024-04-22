@@ -23,15 +23,18 @@ ChartJS.register(
   Legend
 );
 
-export default function ChamadosPorMes() {
+export default function ChamadosPorMes({ ano }) {
   const chamados = useSelector((state) => state.chamado.chamadosPorMes);
   const dispatch = useDispatch();
 
   const pegarChamados = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:5000/graficos/chamadosPorMes`, {
-        credentials: "include",
-      });
+      const response = await fetch(
+        `http://localhost:5000/graficos/chamadosPorMes?ano=${ano}`,
+        {
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) {
         ErrorMessage(`Ocorreu um erro: ${response.statusText}`);
@@ -43,11 +46,11 @@ export default function ChamadosPorMes() {
     } catch (error) {
       ErrorMessage("erro ao pegar chamados:", error);
     }
-  }, [dispatch]);
+  }, [dispatch, ano]);
 
   useEffect(() => {
     pegarChamados();
-  }, [pegarChamados]);
+  }, [pegarChamados, ano]);
 
   const options = {
     responsive: true,
@@ -87,7 +90,7 @@ export default function ChamadosPorMes() {
 
   return (
     <div style={{ width: "45%", height: "450px" }}>
-      <Bar options={options} data={chartData} />
+      <Bar key={ano} options={options} data={chartData} />
     </div>
   );
 }

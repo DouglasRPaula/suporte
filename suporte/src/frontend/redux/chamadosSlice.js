@@ -22,6 +22,8 @@ const chamadoSlice = createSlice({
     descricaoChamado: "",
     tempoChamado: "",
     chamados: [],
+    anosDisponiveis: [],
+    anoSelecionado: new Date().getFullYear(),
     chamadosPorMes: [],
     chamadosPorMesECriticidade: [],
     chamadosPorEmpresaEMes: [],
@@ -37,6 +39,12 @@ const chamadoSlice = createSlice({
     tipoChamadoSelecionado: "",
   },
   reducers: {
+    setAnosDisponiveis: (state, action) => {
+      state.anosDisponiveis = action.payload;
+    },
+    setAnoSelecionado: (state, action) => {
+      state.anoSelecionado = action.payload;
+    },
     listaChamadosPorMes: (state, action) => {
       const chamados = action.payload;
       if (Array.isArray(chamados)) {
@@ -122,6 +130,8 @@ const chamadoSlice = createSlice({
 });
 
 export const {
+  setAnosDisponiveis,
+  setAnoSelecionado,
   adicionarChamado,
   listaChamados,
   atualizarValor,

@@ -27,7 +27,7 @@ ChartJS.register(
   Legend
 );
 
-export default function ChamadosPorEmpresaEMes() {
+export default function ChamadosPorEmpresaEMes({ ano }) {
   const chamadosPorEmpresaEMes = useSelector(
     (state) => state.chamado.chamadosPorEmpresaEMes
   );
@@ -36,7 +36,7 @@ export default function ChamadosPorEmpresaEMes() {
   const pegarChamados = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/graficos/chamadosPorEmpresaEMes`,
+        `http://localhost:5000/graficos/chamadosPorEmpresaEMes?ano=${ano}`,
         {
           credentials: "include",
         }
@@ -52,11 +52,11 @@ export default function ChamadosPorEmpresaEMes() {
     } catch (error) {
       ErrorMessage("erro ao pegar chamados:", error);
     }
-  }, [dispatch]);
+  }, [dispatch, ano]);
 
   useEffect(() => {
     pegarChamados();
-  }, [pegarChamados]);
+  }, [pegarChamados, ano]);
 
   const options = {
     responsive: true,
@@ -106,7 +106,7 @@ export default function ChamadosPorEmpresaEMes() {
 
   return (
     <div style={{ width: "45%", height: "450px" }}>
-      <Bar options={options} data={chartData} />
+      <Bar key={ano} options={options} data={chartData} />
     </div>
   );
 }

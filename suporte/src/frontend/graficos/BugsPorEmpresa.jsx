@@ -27,14 +27,14 @@ ChartJS.register(
   Legend
 );
 
-export default function BugsPorEmpresa() {
+export default function BugsPorEmpresa({ ano }) {
   const bugsPorEmpresa = useSelector((state) => state.chamado.bugsPorEmpresa);
   const dispatch = useDispatch();
 
   const pegarChamados = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/graficos/bugsPorEmpresa`,
+        `http://localhost:5000/graficos/bugsPorEmpresa?ano=${ano}`,
         {
           credentials: "include",
         }
@@ -50,11 +50,11 @@ export default function BugsPorEmpresa() {
     } catch (error) {
       ErrorMessage("erro ao pegar chamados:", error);
     }
-  }, [dispatch]);
+  }, [dispatch, ano]);
 
   useEffect(() => {
     pegarChamados();
-  }, [pegarChamados]);
+  }, [pegarChamados, ano]);
 
   const options = {
     responsive: true,
@@ -103,7 +103,7 @@ export default function BugsPorEmpresa() {
 
   return (
     <div style={{ width: "45%", height: "450px" }}>
-      <Bar options={options} data={chartData} />
+      <Bar key={ano} options={options} data={chartData} />
     </div>
   );
 }
