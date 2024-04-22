@@ -65,9 +65,19 @@ export default function ListagemPage() {
     pegarChamados(currentPage, filtros);
   };
 
+  const reloadChamados = useCallback(() => {
+    const newPage = Math.max(
+      1,
+      currentPage - (chamados.length === 1 && currentPage > 1 ? 1 : 0)
+    );
+    setCurrentPage(newPage);
+    pegarChamados(newPage, filtrosAtuais);
+  }, [currentPage, chamados.length, filtrosAtuais, pegarChamados]);
+
   useEffect(() => {
+    reloadChamados();
     pegarChamados(currentPage, filtrosAtuais);
-  }, [pegarChamados, currentPage, filtrosAtuais]);
+  }, [pegarChamados, currentPage, filtrosAtuais, reloadChamados]);
 
   return (
     <div>
@@ -118,6 +128,7 @@ export default function ListagemPage() {
         onClose={handleCloseModal}
         onConfirm={() => {
           handleCloseModal();
+          reloadChamados();
         }}
         chamadoId={chamadoId}
       />

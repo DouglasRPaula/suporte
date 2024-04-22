@@ -2,7 +2,12 @@ import { Button, Modal } from "react-bootstrap";
 import { deletarChamado } from "../redux/chamadosSlice";
 import { useDispatch } from "react-redux";
 
-export default function DeleteConfirmationModal({ show, onClose, chamadoId }) {
+export default function DeleteConfirmationModal({
+  show,
+  onClose,
+  chamadoId,
+  onConfirm,
+}) {
   const dispatch = useDispatch();
 
   const handleExcluirChamado = async () => {
@@ -18,6 +23,7 @@ export default function DeleteConfirmationModal({ show, onClose, chamadoId }) {
       if (response.ok) {
         onClose();
         dispatch(deletarChamado(chamadoId));
+        onConfirm();
       } else {
         const data = await response.json();
         window.alert(`Erro ao excluir chamado: ${data.error}`);
