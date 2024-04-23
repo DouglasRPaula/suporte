@@ -36,14 +36,16 @@ export default function Graficos({ options, data }) {
   return (
     <div className="my-2 app-name">
       <div className="d-flex justify-content-between flex-nowrap align-items-center pb-2 mb-3">
-        <h1 className="h4 mb-0">Metricas</h1>
+        <h1 className="h4 mb-0">Métricas</h1>
       </div>
       <ul className="nav nav-tabs">
         {anos.length > 0 &&
           anos.map((ano) => (
             <li key={ano} className="nav-item">
               <button
-                className={`nav-link ${ano === anoSelecionado ? "active" : ""}`}
+                className={`nav-link year-nav-link ${
+                  ano === anoSelecionado ? "active" : ""
+                }`}
                 onClick={() => handleAnoClick(ano)}
               >
                 {ano}
@@ -60,7 +62,11 @@ export default function Graficos({ options, data }) {
       >
         <ChamadosPorMes ano={anoSelecionado} options={options} data={data} />
         <CriticidadePorMes ano={anoSelecionado} options={options} data={data} />
-        <ChamadosPorEmpresaEMes ano={anoSelecionado} options={options} data={data} />
+        <ChamadosPorEmpresaEMes
+          ano={anoSelecionado}
+          options={options}
+          data={data}
+        />
         <BugsPorEmpresa ano={anoSelecionado} options={options} data={data} />
       </div>
     </div>

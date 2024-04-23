@@ -21,6 +21,25 @@ video {
   flex-direction: column;
 }
 
+/* Estilos para o componente SideBar */
+.sidebar-nav-link {
+  color: darkgrey;
+}
+
+.sidebar-nav-link.active,
+.sidebar-nav-link.text-black {
+  color: black !important;
+}
+
+/* Estilos para o componente de anos nos gráficos */
+.year-nav-link {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.year-nav-link.active {
+  color: black !important;
+}
+
 .content {
   position: absolute;
   width: 100%;
