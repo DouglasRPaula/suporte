@@ -16,7 +16,7 @@ import {
 } from "../constants/opcoesFormulario";
 import { toast } from "react-toastify";
 
-export default function EditarChamado() {
+export default function EditarChamadosPage() {
   const userInfo = useSelector((state) => state.auth.userInfo);
   const chamado = useSelector((state) => state.chamado);
   const dispatch = useDispatch();

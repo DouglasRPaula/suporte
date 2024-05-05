@@ -13,7 +13,7 @@ import {
 import useCadastro from "../hooks/useCadastro.jsx";
 import { atualizarValor } from "../redux/chamadosSlice.js";
 
-export default function CadastroPage() {
+export default function CadastroChamadosPage() {
   const dispatch = useDispatch();
   const { chamado, aoEnviar, aoVoltar, handleSwitchChange } = useCadastro();
   const { chamadoEncerrado } = chamado;

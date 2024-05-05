@@ -9,7 +9,7 @@ import ChamadoRow from "../constants/ChamadoRow";
 import Paginacao from "../components/Paginacao";
 import FiltroModal from "../modal/FiltroModal";
 
-export default function ListagemPage() {
+export default function ListagemChamadosPage() {
   const chamados = useSelector((state) => state.chamado.chamados);
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
