@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router";
+import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import { useRegisterMutation } from "../redux/usersApiSlice";
 import { setCredentials } from "../redux/authSlice";
@@ -31,6 +32,14 @@ export default function CadastroUsuario() {
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    if (
+      !email.endsWith("@geolabor.com.br") &&
+      !email.endsWith("@simplelabtech.com.br")
+    ) {
+      toast.error("Domínio não permitido.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast.error("Senhas diferentes");
     } else {
@@ -38,6 +47,7 @@ export default function CadastroUsuario() {
         const res = await register({ name, email, password }).unwrap();
         dispatch(setCredentials({ ...res }));
         navigate("/");
+        toast.success("Registro concluído com sucesso!");
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
@@ -65,6 +75,7 @@ export default function CadastroUsuario() {
                   placeholder="Digite seu nome"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  required
                 ></Form.Control>
               </Form.Group>
 
@@ -75,6 +86,7 @@ export default function CadastroUsuario() {
                   placeholder="Digite seu e-mail"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                 ></Form.Control>
               </Form.Group>
 
@@ -85,6 +97,7 @@ export default function CadastroUsuario() {
                   placeholder="Insira sua senha"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 ></Form.Control>
               </Form.Group>
               <Form.Group className="my-2" controlId="confirmPassword">
@@ -94,6 +107,7 @@ export default function CadastroUsuario() {
                   placeholder="Confirme sua senha"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
                 ></Form.Control>
               </Form.Group>
 

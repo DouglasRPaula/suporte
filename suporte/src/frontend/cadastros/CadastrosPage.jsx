@@ -11,13 +11,11 @@ import {
   criticidades,
 } from "../constants/opcoesFormulario.js";
 import useCadastro from "../hooks/useCadastro.jsx";
-import ErrorMessage from "../modal/ErrorMessage.jsx";
 import { atualizarValor } from "../redux/chamadosSlice.js";
 
 export default function CadastroPage() {
   const dispatch = useDispatch();
-  const { chamado, errorMessage, aoEnviar, aoVoltar, handleSwitchChange } =
-    useCadastro();
+  const { chamado, aoEnviar, aoVoltar, handleSwitchChange } = useCadastro();
   const { chamadoEncerrado } = chamado;
 
   return (
@@ -28,7 +26,6 @@ export default function CadastroPage() {
         </div>
       </div>
       <Form id="cadastroForm" onSubmit={aoEnviar}>
-        {errorMessage && <ErrorMessage message={errorMessage} />}
         <Row className="mb-3">
           <Form.Group as={Col} md="12">
             <Form.Label>Número do chamado</Form.Label>

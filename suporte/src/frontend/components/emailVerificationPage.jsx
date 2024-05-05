@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function VerifyEmailPage() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function VerifyEmailPage() {
         navigate("/login");
       })
       .catch((err) => {
-        console.error("Verification failed:", err);
+        toast.error("Verification failed:", err);
         navigate("/login");
       });
   }, [navigate, location.search]);

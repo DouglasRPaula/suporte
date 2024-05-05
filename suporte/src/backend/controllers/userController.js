@@ -25,6 +25,14 @@ const authUser = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, isVerified } = req.body;
 
+  if (
+    !email.endsWith("@geolabor.com.br") &&
+    !email.endsWith("@simplelabtech.com.br")
+  ) {
+    res.status(400);
+    throw new Error("Domínio não permitido.");
+  }
+
   const userExists = await User.findOne({ email });
 
   if (userExists) {

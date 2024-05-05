@@ -3,9 +3,9 @@ import { Button, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { listaChamados } from "../redux/chamadosSlice";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import DeleteConfirmationModal from "../modal/DeleteModal";
 import ChamadoRow from "../constants/ChamadoRow";
-import ErrorMessage from "../modal/ErrorMessage";
 import Paginacao from "../components/Paginacao";
 import FiltroModal from "../modal/FiltroModal";
 
@@ -42,7 +42,7 @@ export default function ListagemPage() {
         );
 
         if (!response.ok) {
-          ErrorMessage(`Ocorreu um  erro: ${response.statusText}`);
+          toast.error(`Ocorreu um  erro inesperado: ${response.statusText}`);
           return;
         }
 
@@ -54,7 +54,7 @@ export default function ListagemPage() {
 
         dispatch(listaChamados(chamadosOrdenados));
       } catch (error) {
-        ErrorMessage("erro ao pegar chamados:", error);
+        toast.error("erro ao atualizar lista de chamados:", error);
       }
     },
     [dispatch, chamadosPorPagina]

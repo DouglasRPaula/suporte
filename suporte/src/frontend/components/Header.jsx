@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/authSlice";
 import { useLogoutMutation } from "../redux/usersApiSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function NavBar() {
   const { userInfo } = useSelector((state) => state.auth);
@@ -25,7 +26,7 @@ export default function NavBar() {
       dispatch(logout());
       navigate("/login");
     } catch (err) {
-      console.error(err);
+      toast.error(err);
     }
   };
 

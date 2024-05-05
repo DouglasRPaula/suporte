@@ -10,9 +10,9 @@ import {
 import { Bar } from "react-chartjs-2";
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ErrorMessage from "../modal/ErrorMessage";
 import { listaChamadosPorMes } from "../redux/chamadosSlice";
 import { labels } from "../constants/graficos";
+import { toast } from "react-toastify";
 
 ChartJS.register(
   CategoryScale,
@@ -37,14 +37,14 @@ export default function ChamadosPorMes({ ano }) {
       );
 
       if (!response.ok) {
-        ErrorMessage(`Ocorreu um erro: ${response.statusText}`);
+        toast.error(`Ocorreu um erro: ${response.statusText}`);
         return;
       }
 
       const data = await response.json();
       dispatch(listaChamadosPorMes(data));
     } catch (error) {
-      ErrorMessage("erro ao pegar chamados:", error);
+      toast.error("erro ao pegar chamados:", error);
     }
   }, [dispatch, ano]);
 

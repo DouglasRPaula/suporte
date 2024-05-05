@@ -14,7 +14,7 @@ import {
   empresas,
   tipoChamado,
 } from "../constants/opcoesFormulario";
-import ErrorMessage from "../modal/ErrorMessage";
+import { toast } from "react-toastify";
 
 export default function EditarChamado() {
   const userInfo = useSelector((state) => state.auth.userInfo);
@@ -23,7 +23,6 @@ export default function EditarChamado() {
   const params = useParams();
   const navigate = useNavigate();
   const [chamadoEncerrado, setChamadoEncerrado] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   const formatarDataParaServer = (data) => {
     if (!data) return "";
@@ -59,8 +58,7 @@ export default function EditarChamado() {
         const data = await response.json();
         dispatch(preencherChamados(data));
       } catch (error) {
-        console.error("Erro ao obter os detalhes do chamado:", error);
-        setErrorMessage(
+        toast.error(
           "Erro ao obter os detalhes do chamado. Por favor, tente novamente."
         );
       }
@@ -73,7 +71,7 @@ export default function EditarChamado() {
       e.preventDefault();
 
       if (!chamado) {
-        setErrorMessage("chamado is undefined");
+        toast.error("chamado is undefined");
         return;
       }
 
@@ -83,7 +81,7 @@ export default function EditarChamado() {
       const encerramento = new Date(dataEncerramento);
 
       if (encerramento < inicio) {
-        setErrorMessage(
+        toast.error(
           "A data de encerramento não pode ser anterior à data de início."
         );
         return;
@@ -128,9 +126,9 @@ export default function EditarChamado() {
           navigate("/chamados");
         }
       } catch (error) {
-        console.error("Erro ao editar o chamado:", error);
-        setErrorMessage(
-          "Erro ao editar o chamado. Por favor, tente novamente."
+        toast.error(
+          "Erro ao editar o chamado. Por favor, tente novamente.",
+          error
         );
       }
     },
@@ -169,7 +167,6 @@ export default function EditarChamado() {
         </div>
       </div>
       <Form id="cadastroForm" onSubmit={aoEnviar}>
-        {errorMessage && <ErrorMessage message={ErrorMessage} />}
         <Row className="mb-3">
           <Form.Group as={Col} md="12">
             <Form.Label>Número do chamado</Form.Label>

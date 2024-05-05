@@ -1,6 +1,7 @@
 import { Button, Modal } from "react-bootstrap";
 import { deletarChamado } from "../redux/chamadosSlice";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 export default function DeleteConfirmationModal({
   show,
@@ -24,15 +25,13 @@ export default function DeleteConfirmationModal({
         onClose();
         dispatch(deletarChamado(chamadoId));
         onConfirm();
+        toast.success("Chamado excluído com sucesso.");
       } else {
         const data = await response.json();
-        window.alert(`Erro ao excluir chamado: ${data.error}`);
+        toast.error(`Erro ao excluir chamado: ${data.error}`);
       }
     } catch (error) {
-      console.error("Erro ao excluir chamado:", error);
-      window.alert(
-        "Erro ao excluir chamado. Verifique o console para mais detalhes."
-      );
+      toast.error("Erro ao excluir chamado.", error);
     }
   };
 

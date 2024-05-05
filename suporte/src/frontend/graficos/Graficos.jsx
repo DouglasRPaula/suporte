@@ -6,6 +6,7 @@ import ChamadosPorEmpresaEMes from "./ChamadosPorEmpresa";
 import ChamadosPorMes from "./ChamadosPorMes";
 import CriticidadePorMes from "./CriticidadePorMes";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 export default function Graficos({ options, data }) {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ export default function Graficos({ options, data }) {
       const data = await response.json();
       dispatch(setAnosDisponiveis(data));
     } catch (error) {
-      console.log("Erro ao buscar anos disponíveis:", error);
+      toast.error("Erro ao buscar anos disponíveis:", error);
     }
   };
 

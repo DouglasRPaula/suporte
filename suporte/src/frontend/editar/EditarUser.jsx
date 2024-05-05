@@ -35,12 +35,11 @@ export default function EditarUsuario() {
           email,
           password,
         }).unwrap();
-        console.log(res);
         dispatch(setCredentials(res));
         toast.success("Usuário atualizado com sucesso");
         navigate("/chamados");
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        toast.error("Erro ao editar usuário", err?.data?.message || err.error);
       }
     }
   };

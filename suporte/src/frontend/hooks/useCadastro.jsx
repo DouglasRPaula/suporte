@@ -7,6 +7,7 @@ import {
   limparForm,
   tempoChamado,
 } from "../redux/chamadosSlice";
+import { toast } from "react-toastify";
 
 const BAD_REQUEST = 400;
 
@@ -15,7 +16,6 @@ export default function useCadastro() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [chamadoEncerrado, setChamadoEncerrado] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   const formatarDataParaServer = (data) => {
     if (!data) return "";
@@ -30,7 +30,7 @@ export default function useCadastro() {
       e.preventDefault();
 
       if (!chamado) {
-        setErrorMessage("chamado is undefined");
+        toast.error("chamado is undefined");
         return;
       }
 
@@ -40,7 +40,7 @@ export default function useCadastro() {
       const encerramento = new Date(dataEncerramento);
 
       if (encerramento < inicio) {
-        setErrorMessage(
+        toast.error(
           "A data de encerramento não pode ser anterior à data de início."
         );
         return;
@@ -105,5 +105,5 @@ export default function useCadastro() {
     [dispatch]
   );
 
-  return { chamado, errorMessage, aoEnviar, aoVoltar, handleSwitchChange };
+  return { chamado, aoEnviar, aoVoltar, handleSwitchChange };
 }

@@ -69,7 +69,6 @@ const postChamados = asyncHandler(async (req, res) => {
 
     res.status(201).json({ message: "Chamado criado com sucesso" });
   } catch (error) {
-    console.log("erro durante o processamento da solicitacao", error);
     res.status(500).json({ error: "erro interno" });
   }
 });

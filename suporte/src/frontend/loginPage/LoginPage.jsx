@@ -32,9 +32,16 @@ export default function LoginPage() {
     try {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
+      toast.success("Login bem-sucedido!");
       navigate("/");
     } catch (err) {
-      toast.error(err?.data?.message || err.error);
+      const errorMessage =
+        err?.data?.message || "Erro desconhecido ao tentar fazer login";
+      if (errorMessage.toLowerCase().includes("invalid credentials")) {
+        toast.error("E-mail ou senha incorretos.");
+      } else {
+        toast.error(errorMessage);
+      }
     }
   };
   return (

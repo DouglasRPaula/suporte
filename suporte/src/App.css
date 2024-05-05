@@ -33,7 +33,16 @@ video {
 
 /* Estilos para o componente de anos nos gráficos */
 .year-nav-link {
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.custom-toast {
+  background-color: #444; /* Cor de fundo do toast */
+  color: #fff; /* Cor do texto do toast */
+}
+
+.custom-body {
+  font-size: 16px; /* Tamanho da fonte dentro do toast */
 }
 
 .year-nav-link.active {

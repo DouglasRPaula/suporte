@@ -44,14 +44,14 @@ app.get('/verify-email', async (req, res) => {
   const user = await User.findOne({ verificationToken: token, isVerified: false });
 
   if (!user) {
-    return res.status(400).send('Invalid or expired verification token.');
+    return res.status(400).send('Token de acesso invalido ou expirado.');
   }
 
   user.isVerified = true;
   user.verificationToken = null;
   await user.save();
 
-  res.send('Email successfully verified. You can now login.');
+  res.send('Email verificado com sucesso.');
 });
 
 app.use(notFound);
