@@ -14,13 +14,6 @@ video {
   object-fit: cover;
 }
 
-.S9gUrf-YoZ4jf,
-.S9gUrf-YoZ4jf * {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-}
-
 /* Estilos para o componente SideBar */
 .sidebar-nav-link {
   color: darkgrey;

@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 import EditarChamadosPage from "./frontend/editar/EditarChamadosPage.jsx";
 import Graficos from "./frontend/graficos/Graficos.jsx";
-import CadastroChamadosPage from "./frontend/cadastros/CadastrosChamado.jsx";
+import CadastroChamadosPage from "./frontend/cadastros/CadastrosChamadoPage.jsx";
 import CadastroUsuario from "./frontend/cadastros/CadastroUsuario.jsx";
 import LoginPage from "./frontend/loginPage/LoginPage.jsx";
 import ListagemChamadosPage from "./frontend/listagem/ListagemChamadosPage.jsx";
