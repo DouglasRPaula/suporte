@@ -2,16 +2,22 @@ const asyncHandler = require("express-async-handler");
 const Chamados = require("../schemas/chamadosModel");
 
 const getChamados = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, ...filtros } = req.query;
+  const queryFiltros = {};
+  for (let key in filtros) {
+    if (filtros[key]) {
+      queryFiltros[key] = new RegExp(filtros[key], "i");
+    }
+  }
 
   try {
-    const chamados = await Chamados.find()
+    const chamados = await Chamados.find(queryFiltros)
       .sort({ dataInicio: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
 
-    const count = await Chamados.countDocuments();
+    const count = await Chamados.countDocuments(queryFiltros);
     res.status(200).json({
       chamados,
       totalPages: Math.ceil(count / limit),
@@ -139,14 +145,14 @@ const getChamadoById = asyncHandler(async (req, res) => {
   try {
     const chamado = await Chamados.findById(req.params.id);
     if (!chamado) {
-      res.status(404).json({ message: 'Chamado não encontrado' });
+      res.status(404).json({ message: "Chamado não encontrado" });
       return;
     }
     res.json(chamado);
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar o chamado' });
+    res.status(500).json({ error: "Erro ao buscar o chamado" });
   }
-})
+});
 
 module.exports = {
   getChamados,

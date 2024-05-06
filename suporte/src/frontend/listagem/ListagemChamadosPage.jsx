@@ -32,10 +32,15 @@ export default function ListagemChamadosPage() {
   }, []);
 
   const pegarChamados = useCallback(
-    async (page = 1) => {
+    async (page = 1, filtros = {}) => {
+      const queryString = new URLSearchParams({
+        page,
+        limit: chamadosPorPagina,
+        ...filtros,
+      }).toString();
       try {
         const response = await fetch(
-          `http://localhost:5000/chamados?page=${page}&limit=${chamadosPorPagina}`,
+          `http://localhost:5000/chamados?${queryString}`,
           {
             credentials: "include",
           }
@@ -62,7 +67,14 @@ export default function ListagemChamadosPage() {
 
   const handleFilter = (filtros) => {
     setFiltrosAtuais(filtros);
-    pegarChamados(currentPage, filtros);
+    pegarChamados(1, filtros);
+  };
+
+  const handleRemoveFilter = (filterKey) => {
+    const newFilters = { ...filtrosAtuais };
+    delete newFilters[filterKey];
+    setFiltrosAtuais(newFilters);
+    pegarChamados(1, newFilters);
   };
 
   const reloadChamados = useCallback(() => {
@@ -90,7 +102,18 @@ export default function ListagemChamadosPage() {
             </Link>
           </div>
         </div>
-        <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+        <div className="d-grid gap-2 d-md-flex justify-content-between">
+          <div className="filter-badges filter-container">
+            {Object.entries(filtrosAtuais).map(
+              ([key, value]) =>
+                value && (
+                  <div className="badge" key={key}>
+                    {`${key}: ${value}`}{" "}
+                    <span onClick={() => handleRemoveFilter(key)}>✕</span>
+                  </div>
+                )
+            )}
+          </div>
           <FiltroModal onFilter={handleFilter} />
         </div>
       </div>
