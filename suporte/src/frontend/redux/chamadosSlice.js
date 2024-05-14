@@ -70,12 +70,10 @@ const chamadoSlice = createSlice({
       }
     },
     atualizarValor: (state, action) => {
-      const { campo, valor, error } = action.payload;
-
-      if (error) {
-        state.error = error;
-      } else {
-        state[campo] = valor;
+      const { campo, valor } = action.payload;
+      state[campo] = valor;
+      if (campo === "dataEncerramento" && valor) {
+        state.chamadoEncerrado = true;
       }
     },
     limparForm: (state) => {

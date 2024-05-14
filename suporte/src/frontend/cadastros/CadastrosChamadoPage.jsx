@@ -128,6 +128,7 @@ export default function CadastroChamadosPage() {
               label={chamadoEncerrado ? "Sim" : "Não"}
               checked={chamadoEncerrado}
               onChange={handleSwitchChange}
+              disabled={!!chamado.dataEncerramento}
             ></Form.Check>
             <Form.Label>Tipo de chamado</Form.Label>
             <Select

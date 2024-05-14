@@ -17,10 +17,10 @@ export default function ChamadoRow({ chamado, handleOpenModal }) {
         {formatarData(chamado.dataEncerramento)}
       </td>
       <td style={{ textAlign: "center" }}>
-        {chamado.chamadoEncerrado ? "Sim" : "Não"}
+        {chamado.chamadoEncerrado || chamado.dataEncerramento ? "Sim" : "Não"}
       </td>
       <td style={{ textAlign: "center" }}>
-        <TipoChamadoTag tipoChamadoId={chamado.tipoChamado} />
+        <TipoChamadoTag tipoChamado={chamado.tipoChamado} />
       </td>
       <td>{chamado.descricaoChamado}</td>
       <td style={{ textAlign: "center" }}>{chamado.tempoChamado}</td>

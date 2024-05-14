@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -98,12 +98,20 @@ export default function useCadastro() {
   const handleSwitchChange = useCallback(
     (e) => {
       const valor = e.target.checked;
-      setChamadoEncerrado(e.target.checked);
 
+      if (!chamado.dataEncerramento) {
+        setChamadoEncerrado(valor);
+      }
       dispatch(atualizarValor({ campo: "chamadoEncerrado", valor }));
     },
-    [dispatch]
+    [dispatch, chamado.dataEncerramento]
   );
+
+  useEffect(() => {
+    if (chamado.dataEncerramento) {
+      setChamadoEncerrado(true);
+    }
+  }, [chamado.dataEncerramento]);
 
   return { chamado, aoEnviar, aoVoltar, handleSwitchChange };
 }
